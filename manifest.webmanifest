@@ -1,0 +1,17 @@
+{
+  "name": "Fiscalização do Rancho",
+  "short_name": "Rancho",
+  "description": "Ficha digital de fiscalização do rancho (Adendo D)",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EDF1F4",
+  "theme_color": "#163E66",
+  "icons": [
+    { "src": "icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

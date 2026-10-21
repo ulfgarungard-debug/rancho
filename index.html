@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base target="_blank">
+<title>Fiscaliza&#xe7;&#xe3;o do Rancho</title>
+<meta name="description" content="Ficha digital de fiscaliza&#xe7;&#xe3;o do rancho (Adendo D)">
+<meta name="theme-color" content="#163E66">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icone-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rancho">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=JetBrains+Mono:wght@500&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: ficha de inspe&#xe7;&#xe3;o em coluna &#xfa;nica (m&#xe1;x. 780px), cabe&#xe7;alho fixo com abas e navega&#xe7;&#xe3;o por se&#xe7;&#xe3;o, barra de a&#xe7;&#xf5;es fixa no rodap&#xe9; */
+:root{
+  --paper:#EDF1F4; --surface:#FFFFFF; --sunk:#E2E8EE; --ink:#0F1E2E; --muted:#56657A; --line:#CCD6E0;
+  --accent:#163E66; --accent-ink:#FFFFFF; --accent-soft:#DCE6F1;
+  --ok:#1D6F45; --ok-soft:#DCEFE3; --bad:#AE2A20; --bad-soft:#F7DFDB; --na:#5C6875; --na-soft:#E2E7EC; --warn:#875700; --warn-soft:#F5EAD0;
+  --pad:#FFFFFF; --pad-line:#B5C1CC;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px; --hdr:120px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0B1219; --surface:#121C27; --sunk:#0D1620; --ink:#E3EBF2; --muted:#93A3B5; --line:#273749;
+  --accent:#8FBCE8; --accent-ink:#0B1219; --accent-soft:#1A2E45;
+  --ok:#5DCB93; --ok-soft:#13311F; --bad:#F08D83; --bad-soft:#3B1B18; --na:#9BA6B2; --na-soft:#222D38; --warn:#E4B252; --warn-soft:#382A0F;
+  --pad:#FFFFFF; --pad-line:#56677A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0B1219; --surface:#121C27; --sunk:#0D1620; --ink:#E3EBF2; --muted:#93A3B5; --line:#273749;
+  --accent:#8FBCE8; --accent-ink:#0B1219; --accent-soft:#1A2E45;
+  --ok:#5DCB93; --ok-soft:#13311F; --bad:#F08D83; --bad-soft:#3B1B18; --na:#9BA6B2; --na-soft:#222D38; --warn:#E4B252; --warn-soft:#382A0F;
+  --pad:#FFFFFF; --pad-line:#56677A; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;text-wrap:balance;margin:0}
+.wrap{max-width:780px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Cabe&#xe7;alho */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:12px 8px;flex-wrap:wrap}
+.code{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.brand h1{font-size:26px;line-height:1.05;text-transform:uppercase}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:3px;border-radius:9px}
+.tabs button{border:0;background:transparent;padding:6px 12px;border-radius:7px;font-family:var(--f-display);font-weight:600;font-size:16px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.secnav{display:flex;gap:6px;overflow-x:auto;padding-block:4px 10px;scrollbar-width:none}
+.secnav::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600;white-space:nowrap;color:var(--ink)}
+.chip .ct{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.chip.done{border-color:var(--ok);background:var(--ok-soft)}
+.chip.done .ct{color:var(--ok)}
+.chip.warn{border-color:var(--bad)}
+.chip.warn .ct{color:var(--bad)}
+
+main{padding-block:16px 120px}
+.view{display:flex;flex-direction:column;gap:16px}
+
+/* Se&#xe7;&#xf5;es da ficha */
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);scroll-margin-top:calc(var(--hdr) + 8px);overflow:hidden}
+.sec-h{display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--sunk)}
+.sec-n{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:500}
+.sec-h h2{font-size:20px;text-transform:uppercase}
+.sec-h .sec-sub{margin-left:auto;font-size:12px;color:var(--muted);text-align:right}
+.sec-b{padding:14px 16px;display:flex;flex-direction:column;gap:14px}
+.sub{display:flex;flex-direction:column;gap:10px}
+.sub h3{font-size:16px;text-transform:uppercase;color:var(--muted);letter-spacing:.04em}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}
+.grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+@media (max-width:520px){.grid3{grid-template-columns:1fr 1fr}.grid3 .fld:first-child{grid-column:1/-1}}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld>span{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+input[type=text],input[type=date],input[type=time],input[type=number],input[type=month],input:not([type]),select,textarea{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:16px}
+textarea{min-height:64px;resize:vertical}
+input:disabled,select:disabled,textarea:disabled{background:var(--sunk);color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.note.ref{font-family:var(--f-mono);font-size:12px}
+
+/* Itens Sim/N&#xe3;o/N/A */
+.list{display:flex;flex-direction:column}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding-block:12px;border-top:1px solid var(--line)}
+.item:first-child{border-top:0;padding-top:2px}
+.item-q{min-width:0}
+.q{margin:0;font-size:15.5px}
+.hint{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.auto-note{margin:4px 0 0;font-size:12.5px;color:var(--accent);font-weight:600}
+.week{margin:6px 0 0;font-size:12.5px;font-weight:600;display:inline-block;padding:2px 8px;border-radius:6px}
+.week.ok{background:var(--ok-soft);color:var(--ok)}
+.week.pend{background:var(--warn-soft);color:var(--warn)}
+.item-a{display:flex;align-items:flex-start;gap:6px}
+.item .full{grid-column:1/-1}
+@media (max-width:560px){.item{grid-template-columns:1fr}.item-a{justify-content:space-between}}
+.tri{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex:none}
+.tri button{border:0;background:var(--surface);padding:8px 12px;min-width:52px;font-weight:700;font-size:14px;color:var(--muted);border-left:1px solid var(--line)}
+.tri button:first-child{border-left:0}
+.tri button[aria-pressed="true"].t-s{background:var(--ok);color:var(--surface)}
+.tri button[aria-pressed="true"].t-n{background:var(--bad);color:var(--surface)}
+.tri button[aria-pressed="true"].t-na{background:var(--na);color:var(--surface)}
+.tri button:disabled{cursor:not-allowed;opacity:.55}
+.tri button[aria-pressed="true"]:disabled{opacity:.8}
+.tri.dec button{min-width:120px;padding:12px 16px;font-family:var(--f-display);font-size:18px;text-transform:uppercase;letter-spacing:.03em}
+.tri.dec button[aria-pressed="true"][data-val="arquivar"]{background:var(--accent);color:var(--accent-ink)}
+.tri.dec button[aria-pressed="true"][data-val="notificar"]{background:var(--bad);color:var(--surface)}
+.mini{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 9px;font-size:13px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.mini svg{width:16px;height:16px}
+.mini.has{color:var(--accent);border-color:var(--accent)}
+.desc-fld{margin-top:8px;max-width:420px}
+input.req{border-color:var(--bad);background:var(--bad-soft)}
+.obs-wrap textarea.req{border-color:var(--bad);background:var(--bad-soft)}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.thumbs:empty{display:none}
+.thumb{position:relative;margin:0}
+.thumb img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
+.thumb button{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-weight:700;line-height:1;padding:0;color:var(--bad)}
+
+/* Pesagem */
+.peso{border:1px solid var(--line);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:10px}
+.peso-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.peso-head h3{font-size:18px;text-transform:uppercase}
+.peso-head .what{font-size:14px;color:var(--muted);font-family:var(--f-body);font-weight:400;text-transform:none;letter-spacing:0}
+.refbadge{font-family:var(--f-mono);font-size:12px;background:var(--accent-soft);color:var(--accent);padding:3px 8px;border-radius:6px;white-space:nowrap}
+.peso-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px}
+.num{display:flex;flex-direction:column;gap:3px;min-width:0}
+.num>span{font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.num-in{position:relative;display:block}
+.num-in input{font-family:var(--f-mono);font-variant-numeric:tabular-nums;padding-right:26px;text-align:right}
+.num-in i{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;font-size:13px;color:var(--muted)}
+.num-in input.low{border-color:var(--bad);background:var(--bad-soft)}
+.num-in input.okv{border-color:var(--ok)}
+.peso-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.sug{font-size:13.5px;font-weight:600;padding:5px 9px;border-radius:7px;background:var(--sunk);color:var(--muted)}
+.sug.ok{background:var(--ok-soft);color:var(--ok)}
+.sug.bad{background:var(--bad-soft);color:var(--bad)}
+.atende{display:flex;align-items:center;gap:8px}
+.lbl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.diverge{font-size:13px;color:var(--warn);font-weight:600;margin:0}
+
+/* Tabela 1 */
+.t1{width:100%;border-collapse:collapse;font-size:13.5px}
+.t1 th{text-align:left;font-family:var(--f-display);text-transform:uppercase;font-size:14px;letter-spacing:.04em;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+.t1 td{padding:4px 8px;border-bottom:1px dashed var(--line);vertical-align:top}
+.t1 td.g{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.t1-wrap{overflow-x:auto}
+details.t1d summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--accent)}
+
+/* Encerramento */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:520px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column}
+.tile b{font-family:var(--f-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.tile span{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.tile.ok b{color:var(--ok)} .tile.bad b{color:var(--bad)} .tile.na b{color:var(--na)} .tile.warn b{color:var(--warn)}
+.nclist{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14.5px}
+.nclist li span{color:var(--muted)}
+.pend{border:1px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:10px 12px}
+.pend h3{font-size:15px;text-transform:uppercase;color:var(--warn)}
+.pend ul{margin:6px 0 0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:3px}
+.pend a{color:var(--ink)}
+.ready{border:1px solid var(--ok);background:var(--ok-soft);color:var(--ok);border-radius:8px;padding:10px 12px;font-weight:600;font-size:14.5px}
+.sigs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.sig{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sig canvas{width:100%;height:150px;background:var(--pad);border:1px dashed var(--pad-line);border-radius:8px;touch-action:none;display:block}
+.sig-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.notif textarea{min-height:200px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:10px 16px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.lock{border:1px solid var(--accent);background:var(--accent-soft);border-radius:var(--r);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.lock p{margin:0;font-weight:600}
+
+/* Rodap&#xe9; de a&#xe7;&#xf5;es */
+.foot{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:10px}
+.savest{font-size:13px;color:var(--muted);min-width:0}
+.savest b{display:block;color:var(--ink);font-size:14px}
+
+/* Hist&#xf3;rico e painel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.panel h2{font-size:20px;text-transform:uppercase}
+.filters{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:10px;align-items:end}
+@media (max-width:600px){.filters{grid-template-columns:1fr 1fr}.filters .btn{grid-column:1/-1}}
+.pill.ref{background:var(--sunk);color:var(--ink)}
+.hlist{display:flex;flex-direction:column;gap:8px}
+.hcard{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.hdate{display:flex;flex-direction:column;align-items:center;min-width:48px;border-right:1px solid var(--line);padding-right:12px}
+.hdate b{font-family:var(--f-display);font-size:24px;line-height:1}
+.hdate span{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.05em}
+.hmain{min-width:0}
+.hmain p{margin:0}
+.hcard-t{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hcard-m{font-size:13px;color:var(--muted)}
+.pill{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pill.rasc{background:var(--warn-soft);color:var(--warn)}
+.pill.arq{background:var(--accent-soft);color:var(--accent)}
+.pill.not{background:var(--bad-soft);color:var(--bad)}
+.pill.ex{background:var(--na-soft);color:var(--na)}
+.hact{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:24px 16px;text-align:center;color:var(--muted)}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.chart .val{fill:var(--ink);font-weight:500}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .bar{fill:var(--accent)}
+.chart .refl{stroke:var(--bad);stroke-dasharray:5 4;stroke-width:1.5}
+.chart .ln{stroke:var(--accent);stroke-width:2.2;fill:none}
+.chart .dot{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.chart .dot.low{stroke:var(--bad);fill:var(--bad)}
+.rank{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.rank li{display:grid;grid-template-columns:1fr auto;gap:10px;font-size:14px;align-items:center}
+.rank .bar-h{grid-column:1/-1;height:6px;border-radius:3px;background:var(--bad-soft);overflow:hidden}
+.rank .bar-h i{display:block;height:100%;background:var(--bad)}
+.rank b{font-family:var(--f-mono);font-size:13px}
+
+/* Tela de acesso */
+.gate{position:fixed;inset:0;z-index:70;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px));overflow-y:auto}
+.gate-c{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;gap:14px}
+.gate-c h1{font-size:30px;text-transform:uppercase;line-height:1.05}
+.gate-c .btn{width:100%;padding:13px 16px;font-size:16px}
+.gate-err{margin:0;color:var(--bad);font-weight:600;font-size:14px}
+.gate-ico{width:64px;height:64px;border-radius:15px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.gate-ico svg{width:38px;height:38px}
+
+/* Toast e modal */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:9px;font-weight:600;font-size:14.5px;max-width:min(92vw,520px);box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(5,12,20,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-c{background:var(--surface);border-radius:12px;padding:18px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:14px;border:1px solid var(--line)}
+.modal-c p{margin:0;font-size:16px}
+.modal-c .row{justify-content:flex-end}
+@media (prefers-reduced-motion:no-preference){.tri button,.chip,.btn{transition:background-color .15s,color .15s,border-color .15s}}
+</style>
+
+</head>
+<body>
+<header class="bar" id="bar">
+  <div class="wrap">
+    <div class="bar-top">
+      <div class="brand">
+        <span class="code" id="hdrCode">Adendo D &#xb7; Ver. 02 &#x2013; 19/06/2023</span>
+        <h1>Fiscaliza&#xe7;&#xe3;o do Rancho</h1>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="Se&#xe7;&#xf5;es do app">
+        <button type="button" role="tab" id="tab-form" data-view="form" aria-selected="true">Ficha</button>
+        <button type="button" role="tab" id="tab-hist" data-view="hist" aria-selected="false">Hist&#xf3;rico</button>
+        <button type="button" role="tab" id="tab-painel" data-view="painel" aria-selected="false">Painel</button>
+      </nav>
+    </div>
+    <div class="secnav" id="secnav" aria-label="Ir para a se&#xe7;&#xe3;o"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="view-form">
+    <div class="lock" id="lockBanner" hidden>
+      <p id="lockText">Fiscaliza&#xe7;&#xe3;o conclu&#xed;da.</p>
+      <div class="row">
+        <button type="button" class="btn" data-act="pdf" data-keep>Gerar PDF</button>
+        <button type="button" class="btn" data-act="email" data-keep>Enviar por e-mail</button>
+        <button type="button" class="btn" data-act="reabrir" id="btnReabrir" data-keep>Reabrir (senha do respons&#xe1;vel)</button>
+      </div>
+    </div>
+    <div id="form" class="view"></div>
+  </section>
+
+  <section class="view" id="view-hist" hidden>
+    <div class="panel">
+      <h2>Fiscaliza&#xe7;&#xf5;es salvas</h2>
+      <div class="filters">
+        <label class="fld"><span>Refei&#xe7;&#xe3;o</span><select id="fRef"><option value="">Todas</option><option value="desjejum">Desjejum</option><option value="almoco">Almo&#xe7;o</option><option value="jantar">Jantar e ceia</option></select></label>
+        <label class="fld"><span>M&#xea;s</span><input type="month" id="fMes"></label>
+        <label class="fld"><span>Situa&#xe7;&#xe3;o</span>
+          <select id="fStatus">
+            <option value="">Todas</option>
+            <option value="rascunho">Rascunho</option>
+            <option value="arquivar">Arquivada</option>
+            <option value="notificar">Notificada</option>
+          </select>
+        </label>
+        <a class="btn" id="lnkPlanilha" target="_blank" rel="noopener" hidden>Abrir planilha</a>
+      </div>
+      <p class="note" id="storeNote"></p>
+    </div>
+    <div class="hlist" id="hlist"></div>
+  </section>
+
+  <section class="view" id="view-painel" hidden>
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <h2>Painel de conformidade</h2>
+        <div class="row" style="gap:10px">
+          <label class="fld" style="width:160px"><span>Refei&#xe7;&#xe3;o</span><select id="pRef"><option value="">Todas</option><option value="desjejum">Desjejum</option><option value="almoco">Almo&#xe7;o</option><option value="jantar">Jantar e ceia</option></select></label>
+          <label class="fld" style="width:170px"><span>M&#xea;s de refer&#xea;ncia</span><input type="month" id="pMes"></label>
+        </div>
+      </div>
+      <div class="tiles" id="pTiles"></div>
+    </div>
+    <div class="panel">
+      <h2>Conformidade por m&#xea;s</h2>
+      <p class="note">Percentual de itens "Sim" sobre itens avaliados (Sim + N&#xe3;o), &#xfa;ltimos 6 meses.</p>
+      <div id="pBars"></div>
+    </div>
+    <div class="panel">
+      <h2>Prote&#xed;na principal do almo&#xe7;o e do jantar</h2>
+      <p class="note">M&#xe9;dia das amostras nas &#xfa;ltimas 12 fiscaliza&#xe7;&#xf5;es. A linha tracejada marca a refer&#xea;ncia de 200 g. Pesagens com osso s&#xe3;o convertidas na propor&#xe7;&#xe3;o 350 g = 200 g para ficarem compar&#xe1;veis.</p>
+      <div id="pLine"></div>
+    </div>
+    <div class="panel">
+      <h2>N&#xe3;o conformidades mais frequentes</h2>
+      <p class="note">&#xda;ltimos 6 meses at&#xe9; o m&#xea;s de refer&#xea;ncia.</p>
+      <ul class="rank" id="pRank"></ul>
+    </div>
+    <div class="panel">
+      <h2>Par&#xe2;metros</h2>
+      <div class="grid2">
+        <label class="fld"><span>Toler&#xe2;ncia na pesagem (%)</span><input type="number" min="0" max="20" step="1" id="cfgTol" inputmode="numeric"></label>
+      </div>
+      <p class="note">Abaixo da refer&#xea;ncia menos a toler&#xe2;ncia, o app sugere "N&#xe3;o atende". O padr&#xe3;o &#xe9; 0%, conforme o TR. O fiscal sempre pode alterar a resposta, justificando.</p>
+      <p class="note" id="cfgNote">Alterar os par&#xe2;metros pede a senha do respons&#xe1;vel.</p>
+      <div class="row"><button type="button" class="btn primary" id="cfgSave">Salvar par&#xe2;metros</button></div>
+    </div>
+    <div class="panel" id="pnlInstalar" hidden>
+      <h2>Instalar no celular</h2>
+      <p class="note" id="instTxt">Instale o app para abrir pelo &#xed;cone, em tela cheia e mesmo sem sinal no refeit&#xf3;rio.</p>
+      <div class="row"><button type="button" class="btn primary" id="btnInstalar" hidden>Instalar app</button></div>
+    </div>
+    <div class="panel">
+      <h2>Acesso neste aparelho</h2>
+      <p class="note" id="acessoTxt">Voc&#xea; entrou com o c&#xf3;digo de acesso da equipe.</p>
+      <div class="row"><button type="button" class="btn danger" id="btnSair">Sair deste aparelho</button></div>
+    </div>
+  </section>
+</main>
+
+<section class="gate" id="gate" hidden aria-labelledby="gateTit">
+  <form class="gate-c" id="gateForm" novalidate>
+    <div class="gate-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9z"/><path d="M8.5 11l1.5 1.5 3-3"/><path d="M8.5 16.5h7"/></svg></div>
+    <div><span class="code">Adendo D &#xb7; Desjejum &#xb7; Almo&#xe7;o &#xb7; Jantar</span><h1 id="gateTit">Fiscaliza&#xe7;&#xe3;o do Rancho</h1></div>
+    <p class="note">Digite o c&#xf3;digo de acesso da equipe de fiscaliza&#xe7;&#xe3;o. Ele &#xe9; pedido s&#xf3; na primeira vez neste aparelho.</p>
+    <label class="fld"><span>C&#xf3;digo de acesso</span><input type="password" id="gateCodigo" autocomplete="current-password" required></label>
+    <label class="fld"><span>Seu nome (fiscal do contrato)</span><input type="text" id="gateNome" autocomplete="name"></label>
+    <p class="gate-err" id="gateErr" role="alert" hidden></p>
+    <button type="submit" class="btn primary" id="gateBtn">Entrar</button>
+  </form>
+</section>
+
+<footer class="foot" id="foot">
+  <div class="wrap">
+    <div class="savest" id="saveState"><b>Rascunho</b><span>Guardado neste aparelho</span></div>
+    <div class="row">
+      <button type="button" class="btn ghost" data-act="nova">Nova</button>
+      <button type="button" class="btn primary" data-act="salvar" id="btnSalvar">Salvar</button>
+    </div>
+  </div>
+</footer>
+
+<input type="file" id="photoInput" accept="image/*" capture="environment" hidden>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="modal" id="modal" hidden>
+  <div class="modal-c" role="dialog" aria-modal="true" aria-labelledby="modalMsg">
+    <p id="modalMsg"></p>
+    <label class="fld" id="modalEmailWrap" hidden><span>Enviar para</span><input type="text" id="modalEmail" inputmode="email" autocomplete="email" placeholder="nome@exemplo.com, outro@exemplo.com"></label>
+    <p class="note" id="modalEmailNote" hidden>Separe v&#xe1;rios e-mails com v&#xed;rgula. O e-mail sai da conta Google do respons&#xe1;vel pelo app.</p>
+    <label class="fld" id="modalSenhaWrap" hidden><span>Senha do respons&#xe1;vel</span><input type="password" id="modalSenha" autocomplete="off"></label>
+    <a class="btn" id="modalLink" target="_blank" rel="noopener" hidden>Abrir PDF no Drive</a>
+    <div class="row">
+      <button type="button" class="btn ghost" id="modalNo">Cancelar</button>
+      <button type="button" class="btn primary" id="modalYes">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+(() => {
+"use strict";
+
+/* ---------- Defini\u00e7\u00f5es dos formul\u00e1rios (Adendo D, Ver. 02 \u2013 19/06/2023) ---------- */
+const FRUTAS = [
+  ["Abacaxi",150,"150 g"],["Banana prata",150,"2 unidades de 75 g"],["Caqui",100,"1 unidade com 100 g"],
+  ["Goiaba",100,"1 unidade com 100 g"],["Laranja pera",100,"1 unidade com 100 g"],["Ma\u00e7\u00e3",100,"1 unidade com 100 g"],
+  ["Mam\u00e3o formosa",150,"150 g de polpa"],["Manga",150,"150 g de polpa"],["Melancia",150,"150 g de polpa"],
+  ["Mel\u00e3o",150,"150 g de polpa"],["Pera",150,"1 unidade com 150 g"],["Tangerina",150,"1 unidade com 150 g"],
+  ["Uva It\u00e1lia/nacional",150,"150 g"],["Salada de frutas",150,"150 g"]
+];
+const DOCES = [
+  ["Sorvete de massa",100,"100 mL"],["Doce de corte (goiabada com queijo)",100,"50 g de doce + 50 g de queijo"],
+  ["Flan",150,"150 g"],["Curau",150,"150 g"],["Gelatina",150,"150 g"],["Gelatina DIET",150,"150 g"],["Flan DIET",150,"150 g"]
+];
+const TIPOS = ["Bovina","Frango","Su\u00edna","Peixe","Outro"];
+const tabTxt = row => row[2] + (row[2].indexOf(String(row[1])) === 0 ? "" : " (" + row[1] + " g)");
+
+/* Itens Sim / N\u00e3o / N/A */
+const I = (id, label, extra) => Object.assign({ id, label }, extra || {});
+const MESA_BASE = [
+  I("vinagre","Foi distribu\u00eddo vinagre"), I("sal","Foi distribu\u00eddo sal (sach\u00ea)"), I("palito","Foi distribu\u00eddo palito (sach\u00ea)"),
+  I("alho_frito","Foi distribu\u00eddo alho frito"), I("shoyu","Foi distribu\u00eddo molho shoyu"), I("ingles","Foi distribu\u00eddo molho ingl\u00eas"),
+  I("molho_alho","Foi distribu\u00eddo molho de alho"), I("pimenta","Foi distribu\u00eddo molho de pimenta"), I("farinha","Foi distribu\u00edda farinha de mesa"),
+  I("catchup","Foi distribu\u00eddo catchup (sach\u00ea)"), I("mostarda","Foi distribu\u00edda mostarda (sach\u00ea)"),
+  I("queijo","Foi distribu\u00eddo queijo ralado, 20 g por comensal",{hint:"Quando h\u00e1 massa de acompanhamento."}),
+  I("limao","Foi distribu\u00eddo lim\u00e3o fatiado",{hint:"Quando houver peixe ou carne de porco."})
+];
+const CAFE = I("cafe","Foi distribu\u00eddo caf\u00e9 doce e amargo na sa\u00edda do refeit\u00f3rio",{hint:"Sem controle de consumo."});
+const CHA = I("cha","Foi distribu\u00eddo ch\u00e1 na sa\u00edda do refeit\u00f3rio",{hint:"Sem controle de consumo."});
+const CARD_VIS = I("cardapio_visivel","Foi disponibilizado em local vis\u00edvel o card\u00e1pio do dia");
+const PLACAS = I("placas","Todos os alimentos est\u00e3o identificados com placas indicativas do tipo, porcionamento e calorias");
+const ambiente = (nome, hora, idInicio) => [
+  I("cortinas_ar","Todas as cortinas de ar est\u00e3o ligadas"),
+  I("cortinas_arriadas","Todas as cortinas est\u00e3o arriadas"),
+  I("falta_alimento","Em algum momento teve falta de alimento no balc\u00e3o",{hint:"Responda pela coluna \u201cAtende ao TR\u201d: Sim = n\u00e3o faltou alimento; N\u00e3o = houve falta."}),
+  I(idInicio,`A empresa iniciou o ${nome} \u00e0s ${hora} com todos os alimentos dispon\u00edveis no balc\u00e3o`,{hora:true}),
+  I("condicoes","Todos os alimentos distribu\u00eddos est\u00e3o em condi\u00e7\u00f5es de consumo humano",{hint:"Crit\u00e9rios de higieniza\u00e7\u00e3o, validade, armazenamento e qualidade."})
+];
+
+/* Pesagens: amostras = quantas amostras; campos = medidas extras; ref(rec) = refer\u00eancia do TR */
+const P_PROT = (k, curto, longo, meia) => ({ k, curto, label: longo, unid: "g", amostras: 3,
+  campos: meia ? [{ f:"inteira", label:"Por\u00e7\u00e3o inteira" }, { f:"meia", label:"Meia por\u00e7\u00e3o" }] : [{ f:"inteira", label:"Por\u00e7\u00e3o inteira" }],
+  ref: rec => { const com = rec.cardapio[k] && rec.cardapio[k].osso === "com"; const v = com ? 350 : 200;
+    return { a: v, f: { inteira: v, meia: com ? 175 : 100 }, txt: (com ? "350 g com osso" : "200 g sem osso, ap\u00f3s coc\u00e7\u00e3o") + (meia ? (com ? " \u00b7 meia 175 g" : " \u00b7 meia 100 g") : "") }; },
+  what: rec => (rec.cardapio[k] && rec.cardapio[k].desc) || "" });
+const P_SOJA = { k:"soja", curto:"Soja", label:"Prote\u00edna \u00e0 base de soja", unid:"g", amostras:3, campos:[{ f:"inteira", label:"Por\u00e7\u00e3o inteira" }],
+  ref: () => ({ a:100, f:{ inteira:100 }, txt:"100 g" }) };
+const P_TAB = (k, curto, label, tab) => ({ k, curto, label, unid:"g", amostras:3, campos:[],
+  ref: rec => { const row = tab.find(r => r[0] === rec.cardapio[k]); return row ? { a: row[1], txt: tabTxt(row) } : { a: null, txt: "selecione no card\u00e1pio", falta: "Escolha o item na se\u00e7\u00e3o Card\u00e1pio para ver a refer\u00eancia." }; },
+  what: rec => rec.cardapio[k] || "" });
+const P_DOCE = P_TAB("doce","Doce","Sobremesa doce",DOCES);
+const P_FRUTA = P_TAB("fruta","Fruta","Sobremesa fruta",FRUTAS);
+const P_FIX = (k, label, unid, a, campos, f, txt) => ({ k, curto: label, label, unid, amostras: a ? 3 : 0, campos, ref: () => ({ a: a || null, f, txt }) });
+const POR_PAO = u => [{ f:"porcao", label:"Por\u00e7\u00e3o por p\u00e3o", unid:u }];
+const COMPL = (k, label, v, unid, txt) => P_FIX(k, label, unid, null, [{ f:"amostra", label:"Amostra da por\u00e7\u00e3o", unid }], { amostra: v }, txt || (v + " " + unid));
+
+const REFEICOES = {
+  desjejum: {
+    nome: "Desjejum", artigo: "do desjejum", pdf: "PROCEDIMENTO DE FISCALIZA\u00c7\u00c3O DI\u00c1RIO - DESJEJUM", cab: { fruta: true },
+    secoes: [
+      { id:"s-cab", t:"Card\u00e1pio", tipo:"cab", titulo:"Identifica\u00e7\u00e3o e card\u00e1pio" },
+      { id:"s-frios", t:"Frios", tipo:"pesos", titulo:"Pesagem dos frios e da salsicha", sub:"Frios: 40 g por p\u00e3o, sem casca ou capa",
+        pdf:"Amostra da Pesagem dos Frios (40 g, sem casca ou sem capa)",
+        nota:"Salsicha: 2 unidades por p\u00e3o. Frios: 2 fatias de 20 g de dois tipos diferentes em cada p\u00e3o.",
+        pesos:[ P_FIX("frios","Frios","g",40,POR_PAO("g"),{ porcao:40 },"40 g por p\u00e3o (2 fatias de 20 g)"),
+                P_FIX("salsicha","Salsicha","un",2,POR_PAO("un"),{ porcao:2 },"2 unidades por p\u00e3o") ] },
+      { id:"s-ovo", t:"Ovo", tipo:"pesos", titulo:"Pesagem do ovo", sub:"Refer\u00eancia: 80 g por p\u00e3o", pdf:"Amostra da Pesagem do Ovo (80 g)",
+        pesos:[ P_FIX("ovo","Ovo mexido","g",80,POR_PAO("g"),{ porcao:80 },"80 g por p\u00e3o") ] },
+      { id:"s-pao", t:"P\u00e3o", tipo:"pesos", titulo:"Pesagem do p\u00e3o", sub:"Refer\u00eancia: 50 g por p\u00e3o", pdf:"Amostra da Pesagem do P\u00e3o (50 g)",
+        nota:"1 p\u00e3o e meio do tipo franc\u00eas (75 g) ou 1 p\u00e3o do tipo integral (50 g). Marque N/A no tipo que n\u00e3o foi servido.",
+        pesos:[ P_FIX("pao_frances","P\u00e3o franc\u00eas","g",50,[{ f:"porcao", label:"Por\u00e7\u00e3o servida", unid:"g" }],{ porcao:75 },"50 g por p\u00e3o \u00b7 por\u00e7\u00e3o 1\u00bd p\u00e3o (75 g)"),
+                P_FIX("pao_integral","P\u00e3o integral","g",50,[{ f:"porcao", label:"Por\u00e7\u00e3o servida", unid:"g" }],{ porcao:50 },"50 g \u00b7 por\u00e7\u00e3o 1 p\u00e3o") ] },
+      { id:"s-compl", t:"Complementares", tipo:"pesos", titulo:"Itens complementares", sub:"Porcionamento por comensal", pdf:"Itens Complementares",
+        nota:"Marque N/A nos itens que n\u00e3o foram servidos no dia.",
+        pesos:[ P_FIX("banana_aveia","Banana prata com aveia","g",null,[{ f:"banana", label:"Banana (2 un.)", unid:"g" },{ f:"aveia", label:"Aveia", unid:"g" }],{ banana:180, aveia:40 },"2 un. de 90 g + 40 g de aveia"),
+                COMPL("bolo","Bolo sabores",150,"g"), COMPL("canjica","Canjica simples",150,"g"), COMPL("iogurte","Iogurte de frutas",180,"mL"),
+                P_FIX("flocos","Flocos de cereais com leite","g",null,[{ f:"cereal", label:"Cereal", unid:"g" },{ f:"leite", label:"Leite", unid:"mL" }],{ cereal:100, leite:180 },"100 g de cereal + 180 mL de leite"),
+                COMPL("coalhada","Coalhada",180,"mL"), COMPL("mingau","Mingau sabores",150,"mL"),
+                { k:"outros", curto:"Outros", label:"Outro item complementar", unid:"g", amostras:0, outros:true, campos:[{ f:"amostra", label:"Amostra da por\u00e7\u00e3o" }],
+                  ref: rec => { const p = rec.pesagem.outros || {}; const v = num(p.prev); return v ? { a:null, f:{ amostra:v }, txt: fmtU(v, p.unid || "g") } : { a:null, txt:"informe o porcionamento", falta:"Informe o porcionamento previsto para ver a sugest\u00e3o." }; },
+                  what: rec => (rec.pesagem.outros && rec.pesagem.outros.desc) || "" } ] },
+      { id:"s-mesa", t:"Mesa de apoio", tipo:"itens", titulo:"Composi\u00e7\u00e3o da mesa de apoio", itens:[
+        I("cafe_leite","Foram distribu\u00eddos caf\u00e9 com e sem a\u00e7\u00facar e leite integral ou semidesnatado"),
+        I("achocolatado","Foi distribu\u00eddo achocolatado em p\u00f3"),
+        I("acucar_adocante","Foram distribu\u00eddos sach\u00ea de a\u00e7\u00facar e vidro de ado\u00e7ante 100 mL"),
+        I("manteiga","Foram distribu\u00eddos sach\u00ea de 10 g de manteiga e margarina tipo extra (com e sem sal)"),
+        I("fruta_cardapio","Foi distribu\u00edda fruta conforme card\u00e1pio",{ dyn: rec => { const row = FRUTAS.find(r => r[0] === rec.cardapio.fruta); return row ? "Fruta do dia: " + row[0] + " \u00b7 " + row[2] + "." : "Escolha a fruta do dia na se\u00e7\u00e3o Card\u00e1pio para ver a gramagem."; } }),
+        I("suco","Foi distribu\u00eddo suco de polpa",{ hint:"Sem controle de consumo." }),
+        CARD_VIS, PLACAS ] },
+      { id:"s-amb", t:"Ambiente", tipo:"itens", ambiente:true, titulo:"Verifica\u00e7\u00e3o do ambiente", sub:"Sal\u00e3o e buffet", itens: ambiente("desjejum","06h30","inicio") },
+      { id:"s-enc", t:"Encerramento", tipo:"enc", titulo:"Encerramento" }
+    ]
+  },
+  almoco: {
+    nome: "Almo\u00e7o", artigo: "do almo\u00e7o", pdf: "PROCEDIMENTO DE FISCALIZA\u00c7\u00c3O - ALMO\u00c7O", cab: { prot:[["principal","Prote\u00edna principal"],["opcao","Prote\u00edna op\u00e7\u00e3o"]], massa:true, sobremesa:true },
+    secoes: [
+      { id:"s-cab", t:"Card\u00e1pio", tipo:"cab", titulo:"Identifica\u00e7\u00e3o e card\u00e1pio" },
+      { id:"s-prot", t:"Prote\u00edna", tipo:"pesos", titulo:"Pesagem da prote\u00edna", sub:"Sem osso: 200 g ap\u00f3s a coc\u00e7\u00e3o<br>Com osso: 350 g por comensal",
+        pdf:"Amostra da Pesagem da Prote\u00edna sem osso* (200 g ap\u00f3s a coc\u00e7\u00e3o)",
+        nota:"Por\u00e7\u00e3o de 200 g por comensal, ou meia por\u00e7\u00e3o (misto): 100 g do principal mais 100 g da op\u00e7\u00e3o.",
+        pdfNota:"*Prote\u00edna com osso: pesagem de 350 g por comensal. Por\u00e7\u00e3o de 200 g por comensal ou por\u00e7\u00e3o de 100 g do principal mais a op\u00e7\u00e3o por comensal.",
+        pesos:[ P_PROT("principal","Principal","Prote\u00edna principal",true), P_PROT("opcao","Op\u00e7\u00e3o","Prote\u00edna op\u00e7\u00e3o",true) ] },
+      { id:"s-soja", t:"Soja", tipo:"pesos", titulo:"Prote\u00edna \u00e0 base de soja", sub:"Refer\u00eancia: 100 g", pdf:"Amostra da Pesagem da Prote\u00edna \u00e0 base de soja (100 g)", pesos:[ P_SOJA ] },
+      { id:"s-buffet", t:"Buffet", tipo:"itens", titulo:"Buffet", itens:[
+        I("tomate","Foi distribu\u00eddo um tipo de tomate",{ hint:"N\u00e3o ser\u00e3o aceitos tomates para molho." }),
+        I("alface","Foi distribu\u00eddo um tipo de alface"), I("folhosa","Foi distribu\u00eddo um tipo de hortali\u00e7a folhosa"),
+        I("legume","Foi distribu\u00eddo um tipo de legume"),
+        I("leguminosa","Foi distribu\u00eddo um tipo de leguminosa",{ hint:"Gr\u00e3o-de-bico, feij\u00e3o-fradinho, lentilha, soja, entre outras." }),
+        I("arroz_polido","Foi distribu\u00eddo arroz polido"), I("arroz_integral","Foi distribu\u00eddo arroz integral tipo cateto"),
+        I("feijao","Foi distribu\u00eddo um tipo de feij\u00e3o (preto/carioca)"), I("sopa","Foi distribu\u00edda sopa",{ desc:"Qual sopa foi servida?", ph:"Ex.: Sopa de legumes" }), I("guarnicao","Foi distribu\u00edda guarni\u00e7\u00e3o",{ desc:"Qual guarni\u00e7\u00e3o foi servida?", ph:"Ex.: Pur\u00ea de batata" }),
+        I("carne_gordura","Foi distribu\u00edda carne sem as gorduras aparentes"),
+        I("ovo","Foi distribu\u00eddo ovo como guarni\u00e7\u00e3o",{ hint:"Tr\u00eas vezes na semana. Nos dias sem ovo previsto, marque N/A.", meta:3 }),
+        I("massa_elab","Foi distribu\u00eddo um tipo de massa elaborada",{ hint:"Duas vezes na semana. Nos dias sem massa prevista, marque N/A.", meta:2 }),
+        I("soja_opcao","Foi distribu\u00edda uma op\u00e7\u00e3o proteica \u00e0 base de soja") ] },
+      { id:"s-mesa", t:"Mesa de apoio", tipo:"itens", titulo:"Composi\u00e7\u00e3o da mesa de apoio", itens: MESA_BASE.concat([
+        I("sucos","Foram distribu\u00eddos dois tipos de suco de polpa, sendo um DIET",{ hint:"Sem controle de consumo." }), CAFE, CHA, CARD_VIS, PLACAS ]) },
+      { id:"s-sobre", t:"Sobremesa", tipo:"pesos", titulo:"Sobremesa", sub:"Fruta e doce \u00b7 Tabela 1", pdf:"Amostra da Sobremesa (Fruta e doce - Tabela 1)", tabela:true, pesos:[ P_DOCE, P_FRUTA ] },
+      { id:"s-amb", t:"Ambiente", tipo:"itens", ambiente:true, titulo:"Verifica\u00e7\u00e3o do ambiente", sub:"Sal\u00e3o e buffet", itens: ambiente("almo\u00e7o","10h40","inicio_1040") },
+      { id:"s-enc", t:"Encerramento", tipo:"enc", titulo:"Encerramento" }
+    ]
+  },
+  jantar: {
+    nome: "Jantar", artigo: "do jantar e ceia", pdf: "PROCEDIMENTO DE FISCALIZA\u00c7\u00c3O - JANTAR E CEIA", cab: { prot:[["principal","Prote\u00edna principal"]], massa:true, sobremesa:true },
+    secoes: [
+      { id:"s-cab", t:"Card\u00e1pio", tipo:"cab", titulo:"Identifica\u00e7\u00e3o e card\u00e1pio" },
+      { id:"s-prot", t:"Prote\u00edna", tipo:"pesos", titulo:"Pesagem da prote\u00edna", sub:"Sem osso: 200 g ap\u00f3s a coc\u00e7\u00e3o<br>Com osso: 350 g por comensal",
+        pdf:"Amostra da Pesagem da Prote\u00edna sem osso* (200 g ap\u00f3s a coc\u00e7\u00e3o)", nota:"Por\u00e7\u00e3o de 200 g por comensal.",
+        pdfNota:"*Prote\u00edna com osso: pesagem de 350 g por comensal. Por\u00e7\u00e3o de 200 g por comensal.",
+        pesos:[ P_PROT("principal","Principal","Prote\u00edna principal",false) ] },
+      { id:"s-soja", t:"Soja", tipo:"pesos", titulo:"Prote\u00edna \u00e0 base de soja", sub:"Refer\u00eancia: 100 g", pdf:"Amostra da Pesagem da Prote\u00edna \u00e0 base de soja (100 g)", pesos:[ P_SOJA ] },
+      { id:"s-buffet", t:"Buffet", tipo:"itens", titulo:"Buffet", itens:[
+        I("tomate","Foi distribu\u00eddo um tipo de tomate ou vinagrete",{ hint:"N\u00e3o ser\u00e3o aceitos tomates para molho." }),
+        I("alface","Foi distribu\u00eddo um tipo de alface"), I("arroz_polido","Foi distribu\u00eddo arroz polido"),
+        I("feijao","Foi distribu\u00eddo um tipo de feij\u00e3o (preto/carioca)"), I("guarnicao","Foi distribu\u00edda guarni\u00e7\u00e3o",{ desc:"Qual guarni\u00e7\u00e3o foi servida?", ph:"Ex.: Pur\u00ea de batata" }),
+        I("carne_gordura","Foi distribu\u00edda carne sem as gorduras aparentes"), I("sopa","Foi distribu\u00edda sopa",{ desc:"Qual sopa foi servida?", ph:"Ex.: Sopa de legumes" }),
+        I("soja_opcao","Foi distribu\u00edda uma op\u00e7\u00e3o proteica \u00e0 base de soja"),
+        I("ovo","Foi distribu\u00eddo ovo como guarni\u00e7\u00e3o",{ hint:"Uma vez na semana. Nos dias sem ovo previsto, marque N/A.", meta:1 }) ] },
+      { id:"s-mesa", t:"Mesa de apoio", tipo:"itens", titulo:"Composi\u00e7\u00e3o da mesa de apoio", itens: MESA_BASE.concat([
+        I("suco","Foi distribu\u00eddo 1 (um) tipo de suco de polpa",{ hint:"Sem controle de consumo." }), CAFE, CHA ]) },
+      { id:"s-sobre", t:"Sobremesa", tipo:"pesos", titulo:"Sobremesa", sub:"Fruta e doce \u00b7 TR itens 8.2.2.6 a 8.2.2.8", pdf:"Amostra da Sobremesa (Fruta e doce*)",
+        pdfNota:"*Consultar TR itens 8.2.2.6, 8.2.2.7 e 8.2.2.8.", tabela:true, pesos:[ P_DOCE, P_FRUTA ] },
+      { id:"s-amb", t:"Ambiente", tipo:"itens", ambiente:true, titulo:"Verifica\u00e7\u00e3o do ambiente", sub:"Sal\u00e3o e buffet", itens: ambiente("jantar","17h30","inicio") },
+      { id:"s-ceia", t:"Ceia", tipo:"itens", titulo:"Ceia \u2013 kit lanche", pdf:"CEIA - Kit Lanche",
+        nota:"Frios: 1 fatia de 30 g de um tipo ou 2 fatias de 15 g de dois tipos de frios.", itens:[
+        I("pao_hotdog","1 p\u00e3o (tipo hot dog) de 50 g"),
+        I("frios_ceia","Frios 30 g, com baixo teor de gordura"),
+        I("fruta_inteira","1 fruta inteira",{ hint:"Ma\u00e7\u00e3, pera, banana-prata, tangerina, entre outras." }),
+        I("bebida","Foi ofertada bebida em dias alternados") ] },
+      { id:"s-enc", t:"Encerramento", tipo:"enc", titulo:"Encerramento" }
+    ]
+  }
+};
+const ORDEM_REF = ["desjejum","almoco","jantar"];
+const MAX_FOTOS = 20;
+
+const M_ = rec => REFEICOES[(rec && rec.refeicao) || "almoco"] || REFEICOES.almoco;
+const secoesDe = rec => M_(rec).secoes;
+const pesosDe = rec => [].concat(...secoesDe(rec).filter(s => s.tipo === "pesos").map(s => s.pesos.map(d => Object.assign({ sec: s.id }, d))));
+const itensDe = rec => [].concat(...secoesDe(rec).filter(s => s.tipo === "itens").map(s => s.itens.map(i => Object.assign({ sec: s.id }, i))));
+const ambienteDe = rec => { const s = secoesDe(rec).find(x => x.ambiente); return s ? s.itens : []; };
+function labelOf(rec, key){
+  if (key.indexOf("p-") === 0) { const d = pesosDe(rec).find(x => "p-" + x.k === key); return d ? "Pesagem: " + d.label.toLowerCase() + (d.outros && rec.pesagem.outros && rec.pesagem.outros.desc ? " (" + rec.pesagem.outros.desc + ")" : "") : key; }
+  const i = itensDe(rec).find(x => x.id === key); return i ? i.label : key;
+}
+function refeicaoPadrao(){ const h = new Date().getHours(); return h < 9 ? "desjejum" : h < 15 ? "almoco" : "jantar"; }
+
+/* ---------- Utilidades ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lsGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } };
+const lsSet = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e) { return false; } };
+const pad2 = n => String(n).padStart(2,"0");
+const isoDay = d => d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+const todayISO = () => isoDay(new Date());
+const fmtDate = iso => iso ? iso.split("-").reverse().join("/") : "";
+const hhmm = (d=new Date()) => pad2(d.getHours())+":"+pad2(d.getMinutes());
+const num = v => { if (v === "" || v == null) return null; const n = parseFloat(String(v).replace(",", ".")); return isFinite(n) ? n : null; };
+const fmtG = v => { const n = num(v); return n == null ? "" : (Math.round(n*10)/10).toString().replace(".", ",") + " g"; };
+const clone = o => JSON.parse(JSON.stringify(o));
+const getPath = (o,p) => p.split(".").reduce((a,k) => a == null ? a : a[k], o);
+function setPath(o,p,v){ const ks=p.split("."); let a=o; for(let i=0;i<ks.length-1;i++){ if(a[ks[i]]==null) a[ks[i]]={}; a=a[ks[i]]; } a[ks[ks.length-1]]=v; }
+const DIAS = ["dom","seg","ter","qua","qui","sex","s\u00e1b"];
+const CAMERA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h3l2-2.5h6L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+
+/* ---------- Estado ---------- */
+function newState(refeicao){
+  if (!REFEICOES[refeicao]) refeicao = refeicaoPadrao();
+  const d = todayISO();
+  const s = {
+    id: "f-" + d.replace(/-/g,"") + "-" + Math.random().toString(36).slice(2,6),
+    refeicao, status: "rascunho", criadoEm: new Date().toISOString(),
+    data: d, fiscal: lsGet("rancho.fiscal") || "", preposto: "",
+    cardapio: { principal:{desc:"",tipo:"",osso:"sem"}, opcao:{desc:"",tipo:"",osso:"sem"}, massa:"", doce:"", fruta:"" },
+    pesagem: {}, itens: {}, horaInicio: "", justificativa: "", fotos: [], decisao: "", assin: {fiscal:"", preposto:""}
+  };
+  pesosDe(s).forEach(dd => {
+    const p = { resp:"", obs:"" };
+    if (dd.amostras) p.a = Array(dd.amostras).fill("");
+    (dd.campos || []).forEach(c => p[c.f] = "");
+    if (dd.outros) { p.desc = ""; p.prev = ""; p.unid = "g"; }
+    s.pesagem[dd.k] = p;
+  });
+  itensDe(s).forEach(i => { s.itens[i.id] = {v:"", obs:""}; if (i.desc) s.itens[i.id].desc = ""; });
+  return s;
+}
+function merge(base, src){
+  if (!src || typeof src !== "object") return base;
+  Object.keys(src).forEach(k => {
+    const b = base[k], v = src[k];
+    if (b && typeof b === "object" && !Array.isArray(b) && v && typeof v === "object" && !Array.isArray(v)) merge(b, v);
+    else base[k] = v;
+  });
+  return base;
+}
+const normalize = s => merge(newState((s && s.refeicao) || "almoco"), s ? clone(s) : null);
+
+let S, dirty = false, openObs = new Set(), photoTarget = null;
+let CFG = { tol: 0 };
+const pads = {};
+
+/* ---------- Regras de pesagem ---------- */
+const fmtU = (v, u) => { const n = num(v); return n == null ? "" : (Math.round(n*10)/10).toString().replace(".", ",") + " " + (u || "g"); };
+const unidDe = (rec, d, c) => (c && c.unid) || (d.outros ? ((rec.pesagem.outros && rec.pesagem.outros.unid) || "g") : d.unid);
+const tolF = () => 1 - (num(CFG.tol) || 0) / 100;
+function sugFor(rec, d){
+  const p = rec.pesagem[d.k] || {}, r = d.ref(rec), t = tolF();
+  const temRef = r.a != null || (r.f && (d.campos || []).some(c => r.f[c.f] != null));
+  if (!temRef) return { s:null, msg: r.falta || "Sem refer\u00eancia." };
+  const checks = [], msg = [];
+  if (d.amostras && r.a != null) {
+    const am = (p.a || []).map(num).filter(v => v != null);
+    if (am.length) { const m = am.reduce((a,b)=>a+b,0)/am.length; checks.push(m >= r.a*t - 1e-9); msg.push("m\u00e9dia " + fmtU(m, unidDe(rec, d))); }
+  }
+  (d.campos || []).forEach(c => { const ref = r.f && r.f[c.f], v = num(p[c.f]);
+    if (ref != null && v != null) { checks.push(v >= ref*t - 1e-9); msg.push(c.label.toLowerCase() + " " + fmtU(v, unidDe(rec, d, c))); } });
+  if (!checks.length) return { s:null, msg:"Digite as pesagens para a sugest\u00e3o autom\u00e1tica." };
+  const ok = checks.every(Boolean);
+  return { s: ok ? "S" : "N", msg: (ok ? "Sugest\u00e3o: atende" : "Sugest\u00e3o: n\u00e3o atende") + " (" + msg.join(", ") + ")" };
+}
+function lowSample(rec, d, field, val){
+  const r = d.ref(rec), n = num(val); if (n == null) return null;
+  const ref = field === "a" ? r.a : (r.f && r.f[field]);
+  if (ref == null) return null;
+  return n < ref*tolF() - 1e-9;
+}
+
+/* ---------- Perguntas, pend\u00eancias, resumo ---------- */
+function questions(rec){
+  const q = [];
+  secoesDe(rec).forEach(s => {
+    if (s.tipo === "pesos") s.pesos.forEach(d => { const p = rec.pesagem[d.k] || {}; q.push({ sec:s.id, key:"p-"+d.k, label:labelOf(rec, "p-"+d.k), v:p.resp || "", obs:p.obs || "", peso:d.k }); });
+    if (s.tipo === "itens") s.itens.forEach(i => { const it = rec.itens[i.id] || {}; q.push({ sec:s.id, key:i.id, label:i.label, v:it.v || "", obs:it.obs || "" }); });
+  });
+  return q;
+}
+function resumo(rec){
+  const q = questions(rec); const c = {S:0,N:0,NA:0,vazio:0};
+  q.forEach(x => { if (x.v === "S") c.S++; else if (x.v === "N") c.N++; else if (x.v === "NA") c.NA++; else c.vazio++; });
+  c.pct = (c.S + c.N) ? Math.round(c.S*100/(c.S+c.N)) : null;
+  c.nc = q.filter(x => x.v === "N");
+  return c;
+}
+function pendencias(rec){
+  const p = [];
+  if (!rec.data) p.push(["s-cab","Informe a data da fiscaliza\u00e7\u00e3o"]);
+  if (!rec.fiscal.trim()) p.push(["s-cab","Informe o nome do fiscal do contrato"]);
+  if (!rec.preposto.trim()) p.push(["s-cab","Informe o nome do preposto da contratada"]);
+  const q = questions(rec);
+  secoesDe(rec).forEach(s => { const n = q.filter(x => x.sec === s.id && !x.v).length; if (n) p.push([s.id, s.t + ": " + n + (n > 1 ? " itens sem resposta" : " item sem resposta")]); });
+  q.filter(x => x.v === "N" && !x.obs.trim()).forEach(x => p.push([x.sec, "Descreva a n\u00e3o conformidade: " + x.label.toLowerCase()]));
+  pesosDe(rec).forEach(d => { const s = sugFor(rec, d), r = rec.pesagem[d.k];
+    if (s.s && r.resp && r.resp !== "NA" && r.resp !== s.s && !r.obs.trim()) p.push([d.sec, "Justifique a resposta diferente da pesagem: " + d.label.toLowerCase()]); });
+  itensDe(rec).filter(i => i.desc && descObrig(rec.itens[i.id]) && !(rec.itens[i.id].desc || "").trim())
+    .forEach(i => p.push([i.sec, i.desc.replace(/\?$/, "").replace(/^Qual /, "Informe qual ")]));
+  if (rec.pesagem.outros && rec.pesagem.outros.resp && rec.pesagem.outros.resp !== "NA" && !rec.pesagem.outros.desc.trim()) p.push(["s-compl","Informe qual \u00e9 o outro item complementar"]);
+  if (ambienteDe(rec).some(i => rec.itens[i.id] && rec.itens[i.id].v === "N") && !rec.justificativa.trim()) p.push(["s-amb","Registre a justificativa da empresa"]);
+  if (!rec.decisao) p.push(["s-enc","Escolha Arquivar ou Notificar"]);
+  if (!rec.assin.fiscal) p.push(["s-enc","Falta a assinatura do fiscal"]);
+  if (!rec.assin.preposto) p.push(["s-enc","Falta a assinatura do preposto"]);
+  return p;
+}
+/* Sopa e guarni\u00e7\u00e3o: o tipo \u00e9 obrigat\u00f3rio sempre que foram servidas (resposta Sim). */
+const descObrig = it => !!it && it.v === "S";
+function textoNotificacao(rec){
+  const nc = resumo(rec).nc;
+  const linhas = nc.map((x,i) => (i+1) + ". " + x.label + (x.obs.trim() ? " \u2013 " + x.obs.trim() : ""));
+  return "\u00c0 CONTRATADA, aos cuidados do Preposto " + (rec.preposto || "________") + ",\n\n" +
+    "Na fiscaliza\u00e7\u00e3o " + M_(rec).artigo + " realizada em " + fmtDate(rec.data) + ", conforme o Procedimento de Fiscaliza\u00e7\u00e3o (Adendo D), foram constatadas as seguintes n\u00e3o conformidades em rela\u00e7\u00e3o ao Termo de Refer\u00eancia:\n\n" +
+    (linhas.length ? linhas.join("\n") : "(nenhuma n\u00e3o conformidade registrada)") +
+    (rec.justificativa.trim() ? "\n\nJustificativa apresentada pela empresa no ato: " + rec.justificativa.trim() : "") +
+    "\n\nSolicita-se a ado\u00e7\u00e3o imediata das provid\u00eancias para regulariza\u00e7\u00e3o e a apresenta\u00e7\u00e3o de manifesta\u00e7\u00e3o formal, nos termos contratuais.\n\n" +
+    (rec.fiscal || "________") + "\nFiscal do Contrato";
+}
+function weekInfo(rec, id){
+  const d = new Date(rec.data + "T12:00:00"); if (isNaN(d)) return null;
+  const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay()+6)%7));
+  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
+  const a = isoDay(mon), b = isoDay(sun), ref = rec.refeicao || "almoco";
+  let n = Store.list.filter(r => r.id !== rec.id && (r.refeicao || "almoco") === ref && r.data >= a && r.data <= b && r.itens && r.itens[id] && r.itens[id].v === "S").length;
+  if (rec.itens[id] && rec.itens[id].v === "S") n++;
+  return { n, a, b };
+}
+const nomeArq = rec => `Fiscalizacao_${M_(rec).nome.normalize("NFD").replace(/[\u0300-\u036f]/g,"")}_${rec.data}`;
+
+/* ---------- Armazenamento: Google Apps Script + Planilha ---------- */
+/* Duas formas de falar com o servidor: dentro do Apps Script (google.script.run) ou pelo PWA no GitHub Pages (fetch ao link /exec). */
+const API_URL = (typeof window.RANCHO_API === "string" && /^https:\/\/script\.google\.com\//.test(window.RANCHO_API)) ? window.RANCHO_API : "";
+const temRun = () => !!(window.google && google.script && google.script.run);
+const temGS = () => temRun() || !!API_URL;
+const getCodigo = () => { try { return localStorage.getItem("rancho.codigo") || ""; } catch(e) { return ""; } };
+const setCodigo = v => { try { if (v) localStorage.setItem("rancho.codigo", v); else localStorage.removeItem("rancho.codigo"); } catch(e) {} };
+function enviarReq(req){
+  const corpo = JSON.stringify(req);
+  if (temRun()) return new Promise((res, rej) => {
+    google.script.run.withSuccessHandler(t => { try { res(JSON.parse(t)); } catch(e) { rej({ code: "servidor", message: "Resposta inv\u00e1lida do servidor." }); } })
+      .withFailureHandler(e => rej({ code: "rede", message: (e && e.message) || String(e) })).chamar(corpo);
+  });
+  const ctrl = ("AbortController" in window) ? new AbortController() : null;
+  const tm = ctrl ? setTimeout(() => ctrl.abort(), 60000) : null;
+  return fetch(API_URL, { method: "POST", body: corpo, redirect: "follow", signal: ctrl ? ctrl.signal : undefined })
+    .then(r => { if (!r.ok) throw { code: "servidor", message: "O servidor respondeu com erro (" + r.status + "). Confira se a implanta\u00e7\u00e3o est\u00e1 em \u201cQualquer pessoa\u201d." }; return r.text(); })
+    .then(t => { try { return JSON.parse(t); } catch(e) { throw { code: "servidor", message: "O servidor n\u00e3o respondeu como esperado. Confira o link do app em config.js e a implanta\u00e7\u00e3o." }; } })
+    .catch(e => { if (e && e.code) throw e; throw { code: "rede", message: "" }; })
+    .finally(() => { if (tm) clearTimeout(tm); });
+}
+async function GS(acao, ...args){
+  if (!temGS()) throw { code: "sem_servidor", message: "" };
+  const r = await enviarReq({ acao, args, codigo: getCodigo() });
+  if (r && r.ok) return r.valor;
+  if (r && r.codigoInvalido) { setCodigo(""); mostrarAcesso("O c\u00f3digo de acesso mudou ou n\u00e3o \u00e9 v\u00e1lido. Digite o c\u00f3digo atual."); throw { code: "codigo", message: "C\u00f3digo de acesso inv\u00e1lido." }; }
+  throw { code: "servidor", message: (r && r.erro) || "" };
+}
+
+/* ---------- Tela de acesso ---------- */
+let acessoOk = null;
+function mostrarAcesso(msg){
+  const g = $("#gate"); g.hidden = false;
+  const er = $("#gateErr"); er.hidden = !msg; er.textContent = msg || "";
+  if (!$("#gateNome").value) $("#gateNome").value = lsGet("rancho.fiscal") || "";
+  setTimeout(() => $("#gateCodigo").focus(), 50);
+}
+$("#gateForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const cod = $("#gateCodigo").value.trim(), nome = $("#gateNome").value.trim();
+  const er = $("#gateErr");
+  if (!cod) { er.hidden = false; er.textContent = "Digite o c\u00f3digo de acesso."; return; }
+  $("#gateBtn").disabled = true; $("#gateBtn").textContent = "Conferindo\u2026"; er.hidden = true;
+  try {
+    const r = await enviarReq({ acao: "ping", args: [], codigo: cod });
+    if (r && r.ok) {
+      setCodigo(cod);
+      if (nome) { lsSet("rancho.fiscal", nome); if (S && !S.fiscal) { S.fiscal = nome; const f = $("#fiscal"); if (f) f.value = nome; persistDraft(); refreshDerived(); } }
+      $("#gate").hidden = true; $("#gateCodigo").value = "";
+      if (acessoOk) { const f = acessoOk; acessoOk = null; f(); } else Store.refresh();
+    } else { er.hidden = false; er.textContent = (r && r.erro) || "N\u00e3o foi poss\u00edvel entrar."; }
+  } catch(err) { er.hidden = false; er.textContent = "Sem conex\u00e3o com o servidor. Verifique a internet e tente de novo."; }
+  finally { $("#gateBtn").disabled = false; $("#gateBtn").textContent = "Entrar"; }
+});
+$("#btnSair").addEventListener("click", async () => {
+  if (!(await confirmBox("Sair deste aparelho? Para entrar de novo ser\u00e1 preciso digitar o c\u00f3digo de acesso. O rascunho atual continua guardado.", "Sair"))) return;
+  setCodigo(""); try { localStorage.removeItem("rancho.cache"); } catch(e) {}
+  Store.list = []; onListChange(); mostrarAcesso("");
+});
+
+function linhaResumo(rec){
+  const c = resumo(rec);
+  const avg = a => { const v = a.map(num).filter(x => x != null); return v.length ? Math.round(v.reduce((x,y)=>x+y,0)/v.length*10)/10 : ""; };
+  const pa = k => (rec.pesagem[k] && rec.pesagem[k].a) || [];
+  return { refeicao: M_(rec).nome, data: rec.data, situacao: rec.status === "concluida" ? "Conclu\u00edda" : "Rascunho",
+    decisao: rec.decisao === "notificar" ? "Notificar" : rec.decisao === "arquivar" ? "Arquivar" : "",
+    fiscal: rec.fiscal, preposto: rec.preposto, principal: rec.pesagem.principal ? rec.cardapio.principal.desc : "", mediaPrincipal: avg(pa("principal")),
+    opcao: rec.pesagem.opcao ? rec.cardapio.opcao.desc : "", mediaOpcao: avg(pa("opcao")), S: c.S, N: c.N, NA: c.NA, vazio: c.vazio, pct: c.pct == null ? "" : c.pct,
+    nc: c.nc.map(x => x.label + (x.obs.trim() ? " (" + x.obs.trim() + ")" : "")).join(" | ") };
+}
+const Store = {
+  mode: "local", list: [], planilha: "", owner: false, canWrite: true,
+  canEdit(){ return true; }, canDelete(){ return true; },
+  async init(){
+    this.list = lsGet("rancho.hist") || [];
+    if (temGS()) {
+      this.mode = "gs"; this.list = lsGet("rancho.cache") || [];
+      onListChange();
+      if (!getCodigo()) { await new Promise(r => { acessoOk = r; mostrarAcesso(""); }); }
+      try { const c = await GS("getConfig"); CFG = Object.assign({ tol: 0 }, { tol: c.tol }); this.planilha = c.planilha || ""; onCfg(); } catch(e) { toast(errMsg(e)); }
+      await this.refresh();
+      setInterval(() => { if (!document.hidden) this.refresh(); }, 60000);
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) this.refresh(); });
+    }
+    onPerm(); onListChange();
+  },
+  async refresh(){
+    if (this.mode === "gs" && !getCodigo()) return;
+    try { const arr = await GS("listar"); this.list = arr.map(t => { try { return JSON.parse(t); } catch(e) { return null; } }).filter(Boolean); lsSet("rancho.cache", this.list); }
+    catch(e) {}
+    onListChange();
+  },
+  async full(rec){ if (this.mode !== "gs") return rec; return JSON.parse(await GS("obter", rec.id)); },
+  async save(rec){
+    if (this.mode === "gs") {
+      const quando = await GS("salvar", JSON.stringify(rec), JSON.stringify(linhaResumo(rec)));
+      const leve = clone(rec); leve.fotos = []; leve.assin = { fiscal: "", preposto: "" }; leve.atualizadoEm = quando;
+      this.list = this.list.filter(x => x.id !== rec.id).concat([leve]); lsSet("rancho.cache", this.list); onListChange();
+      return quando;
+    }
+    const l = this.list.filter(r => r.id !== rec.id); l.push(rec); this.list = l; lsSet("rancho.hist", l); onListChange();
+    return rec.atualizadoEm;
+  },
+  async remove(rec, senha){
+    if (this.mode === "gs") await GS("excluir", rec.id, senha);
+    this.list = this.list.filter(r => r.id !== rec.id);
+    lsSet(this.mode === "gs" ? "rancho.cache" : "rancho.hist", this.list); onListChange();
+  },
+  async reabrir(id, senha){ if (this.mode === "gs") await GS("reabrir", id, senha); },
+  async saveCfg(c, senha){ if (this.mode === "gs") { await GS("salvarConfig", c.tol, senha); return; } lsSet("rancho.cfg", c); }
+};
+function errMsg(e){
+  const m = String((e && e.message) || "").replace(/^(Exception|Error):\s*/i, "");
+  if (e && e.code === "sem_servidor") return "O app ainda n\u00e3o est\u00e1 ligado ao servidor. Confira o link em config.js.";
+  if (e && e.code === "rede") return "Sem conex\u00e3o no momento. O rascunho continua guardado neste aparelho; toque em Salvar de novo quando houver sinal.";
+  if (e && e.code === "codigo") return "Digite o c\u00f3digo de acesso da equipe para continuar.";
+  if (/network|connection|HTTP 0|timed? ?out/i.test(m)) return "Sem conex\u00e3o no momento. O rascunho continua guardado neste aparelho; toque em Salvar de novo quando houver sinal.";
+  return m || "N\u00e3o foi poss\u00edvel concluir a opera\u00e7\u00e3o. Tente de novo.";
+}
+
+/* ---------- Arquivos: download no aparelho e c\u00f3pia no Drive ---------- */
+function baixarLocal(nome, blob){
+  try { const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = nome; a.target = "_self"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000); } catch(e) {}
+}
+const blobB64 = blob => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(",")[1]); fr.onerror = rej; fr.readAsDataURL(blob); });
+async function pdfDe(rec){
+  const blob = await gerarPDF(rec); if (!blob) return;
+  baixarLocal(nomeArq(rec) + ".pdf", blob);
+  if (Store.mode !== "gs") return;
+  toast("Guardando o PDF no Drive\u2026");
+  try {
+    const url = await GS("salvarPdf", rec.id, nomeArq(rec) + "_" + rec.id + ".pdf", await blobB64(blob));
+    infoBox("PDF guardado na pasta do app no Google Drive.", url);
+  } catch(e) { toast(errMsg(e)); }
+}
+
+async function emailDe(rec){
+  if (Store.mode !== "gs") { toast("O envio por e-mail funciona pelo link publicado do app."); return; }
+  if (dirty && rec === S) { const ok = await salvar(true); if (!ok) return; }
+  const dest = await emailBox("Enviar o PDF da fiscaliza\u00e7\u00e3o " + M_(rec).artigo + " de " + fmtDate(rec.data) + " por e-mail.");
+  if (dest == null) return;
+  const lista = dest.split(/[,;\s]+/).map(x => x.trim()).filter(Boolean);
+  const inval = lista.filter(x => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x));
+  if (!lista.length) { toast("Informe pelo menos um e-mail."); return; }
+  if (inval.length) { toast("E-mail inv\u00e1lido: " + inval.join(", ")); return; }
+  lsSet("rancho.emails", lista.join(", "));
+  const blob = await gerarPDF(rec); if (!blob) return;
+  const c = resumo(rec);
+  const dec = rec.decisao === "notificar" ? "Notificar" : rec.decisao === "arquivar" ? "Arquivar" : "n\u00e3o definida";
+  const assunto = "Fiscaliza\u00e7\u00e3o " + M_(rec).artigo + " \u2013 " + fmtDate(rec.data) + (rec.decisao ? " \u2013 " + dec : "");
+  const corpo = "Segue em anexo a ficha de fiscaliza\u00e7\u00e3o " + M_(rec).artigo + " de " + fmtDate(rec.data) + " (Adendo D).\n\n" +
+    "Fiscal do contrato: " + (rec.fiscal || "-") + "\nPreposto da contratada: " + (rec.preposto || "-") + "\n" +
+    "Situa\u00e7\u00e3o: " + (rec.status === "concluida" ? "conclu\u00edda" : "rascunho") + "\nDecis\u00e3o: " + dec + "\n" +
+    "Resultado: " + c.S + " conformes, " + c.N + " n\u00e3o conformes, " + c.NA + " N/A" + (c.pct != null ? " (" + c.pct + "% de conformidade)" : "") + ".\n" +
+    (c.nc.length ? "\nN\u00e3o conformidades:\n" + c.nc.map((x,i) => (i+1) + ". " + x.label + (x.obs.trim() ? " \u2013 " + x.obs.trim() : "")).join("\n") + "\n" : "") +
+    (rec.decisao === "notificar" ? "\n---\n" + textoNotificacao(rec) + "\n" : "") +
+    "\nEnviado pelo app Fiscaliza\u00e7\u00e3o do Rancho.";
+  toast("Enviando o e-mail\u2026");
+  try {
+    await GS("enviarPdfEmail", rec.id, nomeArq(rec) + "_" + rec.id + ".pdf", await blobB64(blob), lista.join(","), assunto, corpo);
+    toast("E-mail enviado para " + lista.join(", ") + ".");
+  } catch(e) { toast(errMsg(e)); }
+}
+
+/* ---------- Componentes HTML ---------- */
+function tri(path, extraCls){
+  return `<div class="tri ${extraCls||""}" data-tri="${path}" role="group" aria-label="Atende ao TR">
+    <button type="button" data-val="S" class="t-s" aria-pressed="false">Sim</button><button type="button" data-val="N" class="t-n" aria-pressed="false">N\u00e3o</button><button type="button" data-val="NA" class="t-na" aria-pressed="false">N/A</button></div>`;
+}
+function tools(ref){
+  return `<button type="button" class="mini" data-obs="${ref}" aria-label="Observa\u00e7\u00e3o">Obs.</button><button type="button" class="mini" data-photo="${ref}" aria-label="Anexar foto">${CAMERA}</button>`;
+}
+function obsBox(ref, path){
+  return `<div class="obs-wrap full" id="obsw-${ref}" hidden><textarea id="obs-${ref}" data-bind="${path}" placeholder="Descreva o que foi constatado (obrigat\u00f3rio quando a resposta for N\u00e3o)"></textarea></div><div class="thumbs full" id="th-${ref}"></div>`;
+}
+function itemRow(it){
+  return `<div class="item" data-item="${it.id}">
+    <div class="item-q"><p class="q">${esc(it.label)}</p>${it.hint ? `<p class="hint">${esc(it.hint)}</p>` : ""}
+      ${it.dyn ? `<p class="hint" id="dyn-${it.id}"></p>` : ""}
+      ${it.desc ? `<label class="fld desc-fld"><span id="descLbl-${it.id}">${esc(it.desc)}</span><input type="text" id="desc-${it.id}" data-bind="itens.${it.id}.desc" placeholder="${esc(it.ph || "")}" autocomplete="off"></label>` : ""}
+      <p class="auto-note" id="auto-${it.id}" hidden></p>${it.meta ? `<p class="week" id="week-${it.id}"></p>` : ""}
+      ${it.hora ? `<label class="fld" style="margin-top:8px;max-width:200px"><span>Hor\u00e1rio real de in\u00edcio</span><input type="time" id="horaInicio" data-bind="horaInicio"></label>` : ""}
+    </div>
+    <div class="item-a">${tri("itens."+it.id+".v")}<div class="row" style="gap:6px">${tools(it.id)}</div></div>
+    ${obsBox(it.id, "itens."+it.id+".obs")}
+  </div>`;
+}
+function numField(path, label, k, field, unid){
+  return `<label class="num"><span>${label}</span><span class="num-in"><input type="text" inputmode="decimal" autocomplete="off" id="${path}" data-bind="${path}" data-k="${k}" data-f="${field}"><i data-u="${k}:${field}">${esc(unid)}</i></span></label>`;
+}
+function pesoBlock(d){
+  const k = d.k, ref = "p-" + k;
+  const outros = d.outros ? `<div class="grid3">
+      <label class="fld"><span>Item</span><input type="text" id="pesagem.outros.desc" data-bind="pesagem.outros.desc" placeholder="Ex.: Tapioca"></label>
+      <label class="fld"><span>Porcionamento previsto</span><input type="text" inputmode="decimal" id="pesagem.outros.prev" data-bind="pesagem.outros.prev"></label>
+      <label class="fld"><span>Unidade</span><select id="pesagem.outros.unid" data-bind="pesagem.outros.unid"><option value="g">g</option><option value="mL">mL</option></select></label>
+    </div>` : "";
+  const u = c => unidDe(S, d, c);
+  return `<div class="peso" data-peso="${k}">
+    <div class="peso-head"><h3>${esc(d.curto)} <span class="what" id="what-${k}"></span></h3><span class="refbadge" id="ref-${k}"></span></div>
+    ${outros}
+    <div class="peso-grid">
+      ${Array.from({ length: d.amostras || 0 }, (_, i) => numField(`pesagem.${k}.a.${i}`, `${i+1}\u00aa amostra`, k, "a", u())).join("")}
+      ${(d.campos || []).map(c => numField(`pesagem.${k}.${c.f}`, c.label, k, c.f, u(c))).join("")}
+    </div>
+    <div class="peso-foot"><span class="sug" id="sug-${k}"></span>
+      <div class="atende"><span class="lbl">Atende ao TR</span>${tri(`pesagem.${k}.resp`)}<div class="row" style="gap:6px">${tools(ref)}</div></div></div>
+    <p class="diverge" id="div-${k}" hidden>A resposta difere da sugest\u00e3o da pesagem. Justifique na observa\u00e7\u00e3o.</p>
+    <div class="obs-wrap" id="obsw-${ref}" hidden><textarea id="obs-${ref}" data-bind="pesagem.${k}.obs" placeholder="Observa\u00e7\u00e3o sobre a pesagem"></textarea></div>
+    <div class="thumbs" id="th-${ref}"></div>
+  </div>`;
+}
+const sel = (path, opts, ph) => `<select id="${path}" data-bind="${path}"><option value="">${ph}</option>${opts.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join("")}</select>`;
+function secHead(n, title, sub){ return `<header class="sec-h"><span class="sec-n">${pad2(n)}</span><h2>${esc(title)}</h2>${sub ? `<span class="sec-sub">${sub}</span>` : ""}</header>`; }
+function protCard(k, t){
+  return `<div class="sub"><h3>${t}</h3><div class="grid3">
+    <label class="fld"><span>Prepara\u00e7\u00e3o</span><input type="text" id="cardapio.${k}.desc" data-bind="cardapio.${k}.desc" placeholder="${k === "principal" ? "Ex.: Frango assado" : "Ex.: Peixe grelhado"}"></label>
+    <label class="fld"><span>Tipo</span>${sel(`cardapio.${k}.tipo`, TIPOS, "\u2014")}</label>
+    <label class="fld"><span>Osso</span><select id="cardapio.${k}.osso" data-bind="cardapio.${k}.osso"><option value="sem">Sem osso</option><option value="com">Com osso</option></select></label>
+  </div></div>`;
+}
+const TABELA1 = `<details class="t1d"><summary>Tabela 1 \u2013 Gramagem de frutas e doces por comensal</summary>
+    <div class="t1-wrap"><table class="t1"><thead><tr><th>Frutas</th><th></th><th>Doces</th><th></th></tr></thead><tbody>
+    ${FRUTAS.map((f,i) => `<tr><td>${esc(f[0])}</td><td class="g">${esc(f[2])}</td><td>${DOCES[i] ? esc(DOCES[i][0]) : ""}</td><td class="g">${DOCES[i] ? esc(DOCES[i][2]) : ""}</td></tr>`).join("")}
+    </tbody></table></div></details>`;
+
+function cabHTML(M){
+  const c = M.cab, notas = [];
+  let h = `<div class="grid2">
+        <label class="fld"><span>Refei\u00e7\u00e3o</span><select id="refeicaoSel" data-keep-lock>${ORDEM_REF.map(r => `<option value="${r}">${REFEICOES[r].nome}${r === "jantar" ? " e ceia" : ""}</option>`).join("")}</select></label>
+        <label class="fld"><span>Data</span><input type="date" id="data" data-bind="data"></label>
+        <label class="fld"><span>Fiscal do contrato</span><input type="text" id="fiscal" data-bind="fiscal" autocomplete="name"></label>
+        <label class="fld"><span>Preposto da contratada</span><input type="text" id="preposto" data-bind="preposto"></label>
+      </div>`;
+  (c.prot || []).forEach(([k, t]) => h += protCard(k, t));
+  if (c.massa || c.sobremesa) {
+    h += `<div class="sub"><h3>Acompanhamentos e sobremesa</h3><div class="grid2">
+        ${c.massa ? `<label class="fld"><span>Houve massa de acompanhamento?</span><select id="cardapio.massa" data-bind="cardapio.massa"><option value="">\u2014</option><option value="sim">Sim</option><option value="nao">N\u00e3o</option></select></label>` : ""}
+        ${c.sobremesa ? `<label class="fld"><span>Sobremesa doce</span>${sel("cardapio.doce", DOCES.map(d=>d[0]), "\u2014")}</label>
+        <label class="fld"><span>Sobremesa fruta</span>${sel("cardapio.fruta", FRUTAS.map(f=>f[0]), "\u2014")}</label>` : ""}
+      </div></div>`;
+    notas.push("O tipo da prote\u00edna e a massa definem automaticamente quando o lim\u00e3o e o queijo ralado s\u00e3o N/A.");
+  }
+  if (c.fruta) h += `<div class="sub"><h3>Card\u00e1pio do desjejum</h3><div class="grid2"><label class="fld"><span>Fruta do dia</span>${sel("cardapio.fruta", FRUTAS.map(f=>f[0]), "\u2014")}</label></div></div>`;
+  if (notas.length) h += `<p class="note">${notas.join(" ")}</p>`;
+  return h;
+}
+function encHTML(){
+  return `<div class="tiles" id="encTiles"></div>
+      <p class="note" id="fotoCount"></p>
+      <div class="sub" id="ncWrap"><h3>N\u00e3o conformidades</h3><ol class="nclist" id="ncList"></ol></div>
+      <div id="pendWrap"></div>
+      <div class="sub"><h3>Decis\u00e3o</h3>
+        <div class="tri dec" data-tri="decisao" role="group" aria-label="Decis\u00e3o"><button type="button" data-val="arquivar" aria-pressed="false">Arquivar</button><button type="button" data-val="notificar" aria-pressed="false">Notificar</button></div>
+      </div>
+      <div class="sub notif" id="notifWrap" hidden><h3>Rascunho da notifica\u00e7\u00e3o</h3>
+        <textarea id="notifTxt" readonly data-keep></textarea>
+        <div class="row"><button type="button" class="btn" data-act="copiar" data-keep>Copiar texto</button></div>
+      </div>
+      <div class="sub"><h3>Respons\u00e1veis pelas informa\u00e7\u00f5es</h3>
+        <div class="sigs">
+          <div class="sig"><canvas id="pad-fiscal" aria-label="Assinatura do fiscal do contrato"></canvas>
+            <div class="sig-row"><span class="lbl">Fiscal do contrato \u00b7 <span id="sigNomeFiscal"></span></span><button type="button" class="mini" data-clear="fiscal">Limpar</button></div></div>
+          <div class="sig"><canvas id="pad-preposto" aria-label="Assinatura do preposto da contratada"></canvas>
+            <div class="sig-row"><span class="lbl">Preposto da contratada \u00b7 <span id="sigNomePreposto"></span></span><button type="button" class="mini" data-clear="preposto">Limpar</button></div></div>
+        </div>
+        <p class="note">Assine com o dedo dentro do quadro.</p>
+      </div>
+      <div class="row">
+        <button type="button" class="btn primary" data-act="concluir" id="btnConcluir">Concluir fiscaliza\u00e7\u00e3o</button>
+        <button type="button" class="btn" data-act="pdf" data-keep>Gerar PDF</button>
+        <button type="button" class="btn" data-act="email" data-keep>Enviar por e-mail</button>
+      </div>`;
+}
+function renderForm(){
+  const M = M_(S);
+  $("#hdrCode").textContent = "Adendo D \u00b7 " + M.nome + (S.refeicao === "jantar" ? " e ceia" : "") + " \u00b7 Ver. 02 \u2013 19/06/2023";
+  $("#form").innerHTML = M.secoes.map((s, i) => {
+    let body = "";
+    if (s.tipo === "cab") body = cabHTML(M);
+    else if (s.tipo === "pesos") body = s.pesos.map(pesoBlock).join("") + (s.nota ? `<p class="note">${esc(s.nota)}</p>` : "") + (s.tabela ? TABELA1 : "");
+    else if (s.tipo === "itens") body = `<div class="list">${s.itens.map(itemRow).join("")}</div>` + (s.nota ? `<p class="note">${esc(s.nota)}</p>` : "") +
+      (s.ambiente ? `<label class="fld"><span id="justLbl">Justificativa da empresa</span><textarea id="justificativa" data-bind="justificativa" placeholder="Registre a explica\u00e7\u00e3o dada pelo preposto"></textarea></label>` : "");
+    else if (s.tipo === "enc") body = encHTML();
+    return `<section class="sec" id="${s.id}">${secHead(i+1, s.titulo, s.sub)}<div class="sec-b">${body}</div></section>`;
+  }).join("");
+  $("#refeicaoSel").value = S.refeicao;
+  $$("#form [data-bind]").forEach(el => { const v = getPath(S, el.dataset.bind); el.value = v == null ? "" : v; });
+  pesosDe(S).forEach(d => renderThumbs("p-"+d.k)); itensDe(S).forEach(i => renderThumbs(i.id));
+  initPad("fiscal"); initPad("preposto");
+  applyLock();
+  refreshDerived();
+}
+
+/* ---------- Atualiza\u00e7\u00e3o derivada ---------- */
+function paintTri(el){
+  const v = getPath(S, el.dataset.tri);
+  el.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.val === v)));
+}
+function isLocked(){ return S.status === "concluida" || !Store.canEdit(S); }
+function applyAuto(){
+  const locked = isLocked();
+  const rule = (id, cond, why) => {
+    const it = S.itens[id]; if (!it) return;
+    if (cond) { if (it.v !== "NA" || !it.auto) { it.v = "NA"; it.auto = true; } }
+    else if (it.auto) { it.v = ""; it.auto = false; }
+    const note = document.getElementById("auto-" + id);
+    if (note) { note.hidden = !cond; note.textContent = cond ? why : ""; }
+    $$(`[data-tri="itens.${id}.v"] button`).forEach(b => b.disabled = locked || !!cond);
+  };
+  const c = M_(S).cab;
+  if (c.massa) rule("queijo", S.cardapio.massa === "nao", "N/A autom\u00e1tico: n\u00e3o houve massa de acompanhamento.");
+  if (c.prot) {
+    const tipos = c.prot.map(([k]) => S.cardapio[k].tipo);
+    const temPP = tipos.some(t => t === "Peixe" || t === "Su\u00edna");
+    rule("limao", !!S.cardapio.principal.tipo && !temPP, "N/A autom\u00e1tico: n\u00e3o h\u00e1 peixe nem carne su\u00edna no card\u00e1pio.");
+  }
+}
+function refreshDerived(){
+  applyAuto();
+  $$("#form [data-tri]").forEach(paintTri);
+  // Pesagens
+  pesosDe(S).forEach(d => {
+    const k = d.k, r = d.ref(S), s = sugFor(S, d), p = S.pesagem[k];
+    const refEl = document.getElementById("ref-" + k); if (refEl) refEl.textContent = "Ref. " + r.txt;
+    const what = document.getElementById("what-" + k); if (what) { const w = d.what ? d.what(S) : ""; what.textContent = w ? "\u00b7 " + w : ""; }
+    const sg = document.getElementById("sug-" + k);
+    if (sg) { sg.textContent = s.msg; sg.className = "sug" + (s.s === "S" ? " ok" : s.s === "N" ? " bad" : ""); }
+    $$(`#form input[data-k="${k}"]`).forEach(inp => { const low = lowSample(S, d, inp.dataset.f, inp.value); inp.classList.toggle("low", low === true); inp.classList.toggle("okv", low === false); });
+    if (d.outros) $$(`#form i[data-u^="outros:"]`).forEach(el => el.textContent = unidDe(S, d));
+    const dv = document.getElementById("div-" + k);
+    const diverge = !!(s.s && p.resp && p.resp !== "NA" && p.resp !== s.s);
+    if (dv) dv.hidden = !diverge;
+    obsState("p-" + k, p.resp === "N" || diverge, p.obs);
+  });
+  itensDe(S).forEach(i => {
+    obsState(i.id, S.itens[i.id].v === "N", S.itens[i.id].obs);
+    if (i.dyn) { const el = document.getElementById("dyn-" + i.id); if (el) el.textContent = i.dyn(S); }
+    if (i.desc) { const it = S.itens[i.id], need = descObrig(it);
+      const inp = document.getElementById("desc-" + i.id); if (inp) inp.classList.toggle("req", need && !(it.desc || "").trim());
+      const lb = document.getElementById("descLbl-" + i.id); if (lb) lb.textContent = i.desc + (need ? " (obrigat\u00f3rio)" : ""); }
+    if (i.meta) {
+      const el = document.getElementById("week-" + i.id); if (!el) return;
+      const w = weekInfo(S, i.id); if (!w) { el.hidden = true; return; }
+      el.hidden = false;
+      el.textContent = `Semana de ${fmtDate(w.a).slice(0,5)} a ${fmtDate(w.b).slice(0,5)}: ${w.n} de ${i.meta} ${i.meta > 1 ? "dias" : "dia"} com "Sim"`;
+      el.className = "week " + (w.n >= i.meta ? "ok" : "pend");
+    }
+  });
+  // Justificativa
+  const ambNC = ambienteDe(S).some(i => S.itens[i.id].v === "N");
+  const jl = $("#justLbl"); if (jl) jl.textContent = ambNC ? "Justificativa da empresa (obrigat\u00f3ria)" : "Justificativa da empresa";
+  const jt = $("#justificativa"); if (jt) jt.classList.toggle("req", ambNC && !S.justificativa.trim());
+  // Encerramento
+  const c = resumo(S);
+  const tl = $("#encTiles");
+  if (tl) tl.innerHTML = `<div class="tile ok"><b>${c.S}</b><span>Conformes</span></div><div class="tile bad"><b>${c.N}</b><span>N\u00e3o conformes</span></div><div class="tile na"><b>${c.NA}</b><span>N/A</span></div><div class="tile warn"><b>${c.vazio}</b><span>Sem resposta</span></div>`;
+  const fc = $("#fotoCount"); if (fc) fc.textContent = `Fotos anexadas: ${S.fotos.length} de ${MAX_FOTOS}.`;
+  const ncw = $("#ncWrap"); if (ncw) { ncw.hidden = !c.nc.length; $("#ncList").innerHTML = c.nc.map(x => `<li>${esc(x.label)}${x.obs.trim() ? ` <span>\u2013 ${esc(x.obs.trim())}</span>` : ""}</li>`).join(""); }
+  const pend = pendencias(S); const pw = $("#pendWrap");
+  if (pw) {
+    if (isLocked()) pw.innerHTML = "";
+    else if (pend.length) pw.innerHTML = `<div class="pend"><h3>Antes de concluir (${pend.length})</h3><ul>${pend.slice(0,12).map(p => `<li><a href="#" data-goto="${p[0]}">${esc(p[1])}</a></li>`).join("")}${pend.length > 12 ? `<li>e mais ${pend.length-12}\u2026</li>` : ""}</ul></div>`;
+    else pw.innerHTML = `<div class="ready">Tudo preenchido. Pode concluir a fiscaliza\u00e7\u00e3o.</div>`;
+  }
+  const nw = $("#notifWrap"); if (nw) { nw.hidden = S.decisao !== "notificar"; if (!nw.hidden) $("#notifTxt").value = textoNotificacao(S); }
+  const nf = $("#sigNomeFiscal"); if (nf) nf.textContent = S.fiscal || "\u2014";
+  const np = $("#sigNomePreposto"); if (np) np.textContent = S.preposto || "\u2014";
+  // Navega\u00e7\u00e3o por se\u00e7\u00e3o
+  const q = questions(S), M = M_(S);
+  $("#secnav").innerHTML = M.secoes.map(s => {
+    let ct = "", cls = "";
+    if (s.tipo === "cab") { const ok = S.data && S.fiscal.trim() && S.preposto.trim() && (!M.cab.prot || S.cardapio.principal.desc.trim()); cls = ok ? "done" : ""; ct = ok ? "ok" : ""; }
+    else if (s.tipo === "enc") { const ok = S.decisao && S.assin.fiscal && S.assin.preposto; cls = ok ? "done" : ""; ct = ok ? "ok" : ""; }
+    else { const qs = q.filter(x => x.sec === s.id); const a = qs.filter(x => x.v).length; const nc = qs.filter(x => x.v === "N").length; ct = a + "/" + qs.length; cls = nc ? "warn" : (a === qs.length ? "done" : ""); }
+    return `<button type="button" class="chip ${cls}" data-goto="${s.id}">${s.t}${ct ? ` <span class="ct">${ct}</span>` : ""}</button>`;
+  }).join("");
+  measureHeader();
+}
+function trocarRefeicao(nova){
+  if (!REFEICOES[nova] || nova === S.refeicao) return;
+  const novo = newState(nova);
+  ["id","criadoEm","data","fiscal","preposto","atualizadoEm"].forEach(k => { if (S[k] != null) novo[k] = S[k]; });
+  novo.fotos = S.fotos.filter(f => novo.itens[f.ref] || novo.pesagem[String(f.ref).replace(/^p-/,"")]);
+  S = novo; openObs.clear(); renderForm(); changed();
+}
+function obsState(ref, needed, text){
+  const w = document.getElementById("obsw-" + ref); if (!w) return;
+  w.hidden = !(needed || (text && text.trim()) || openObs.has(ref));
+  const ta = document.getElementById("obs-" + ref); if (ta) ta.classList.toggle("req", needed && !(text||"").trim());
+  const b = document.querySelector(`[data-obs="${ref}"]`); if (b) b.classList.toggle("has", !!(text && text.trim()));
+}
+function renderThumbs(ref){
+  const el = document.getElementById("th-" + ref); if (!el) return;
+  const locked = isLocked();
+  el.innerHTML = S.fotos.map((f,i) => f.ref === ref ? `<figure class="thumb"><img src="${f.src}" alt="Foto: ${esc(labelOf(S, ref))}">${locked ? "" : `<button type="button" data-rmphoto="${i}" aria-label="Remover foto">\u00d7</button>`}</figure>` : "").join("");
+  const b = document.querySelector(`[data-photo="${ref}"]`); if (b) b.classList.toggle("has", S.fotos.some(f => f.ref === ref));
+}
+function applyLock(){
+  const locked = isLocked();
+  $("#lockBanner").hidden = !locked;
+  if (locked) {
+    let t;
+    if (!Store.canWrite) t = "Seu acesso a este app \u00e9 s\u00f3 de leitura. Para registrar fiscaliza\u00e7\u00f5es, pe\u00e7a ao respons\u00e1vel para te convidar como Editor.";
+    else if (!Store.canEdit(S)) t = "Fiscaliza\u00e7\u00e3o de " + fmtDate(S.data) + " registrada por outro fiscal" + (S.fiscal ? " (" + S.fiscal + ")" : "") + ". Somente leitura.";
+    else t = "Fiscaliza\u00e7\u00e3o " + M_(S).artigo + " de " + fmtDate(S.data) + " conclu\u00edda" + (S.concluidaEm ? " \u00e0s " + hhmm(new Date(S.concluidaEm)) : "") + (S.decisao ? " \u00b7 " + (S.decisao === "notificar" ? "Notificar" : "Arquivar") : "") + "." + (Store.canDelete() ? "" : " S\u00f3 o respons\u00e1vel pelo app pode reabri-la.");
+    $("#lockText").textContent = t;
+  }
+  $("#btnReabrir").hidden = !(S.status === "concluida" && Store.canEdit(S) && Store.canDelete());
+  $$("#form input, #form select, #form textarea, #form button").forEach(el => { if (!el.hasAttribute("data-keep")) el.disabled = locked; });
+  $("#btnSalvar").hidden = locked;
+}
+
+/* ---------- Assinatura ---------- */
+function initPad(who){
+  const c = document.getElementById("pad-" + who); if (!c) return;
+  const ctx = c.getContext("2d");
+  const fit = () => {
+    const r = c.getBoundingClientRect(); if (!r.width) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width = Math.round(r.width*dpr); c.height = Math.round(r.height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#0F1E2E";
+    if (S.assin[who]) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = S.assin[who]; }
+  };
+  pads[who] = { fit, clear(){ ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,c.width,c.height); ctx.restore(); } };
+  fit();
+  let drawing = false, last = null, moved = false;
+  const pt = e => { const r = c.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  c.addEventListener("pointerdown", e => { if (isLocked()) return; drawing = true; moved = false; try { c.setPointerCapture(e.pointerId); } catch(_){} last = pt(e); ctx.beginPath(); ctx.arc(last.x, last.y, 1.1, 0, Math.PI*2); ctx.fillStyle = "#0F1E2E"; ctx.fill(); e.preventDefault(); });
+  c.addEventListener("pointermove", e => { if (!drawing) return; const p = pt(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; moved = true; e.preventDefault(); });
+  const end = () => { if (!drawing) return; drawing = false;
+    const out = document.createElement("canvas"); out.width = 480; out.height = 160;
+    out.getContext("2d").drawImage(c, 0, 0, 480, 160);
+    S.assin[who] = out.toDataURL("image/png"); changed(); };
+  c.addEventListener("pointerup", end); c.addEventListener("pointercancel", end); c.addEventListener("pointerleave", end);
+}
+
+/* ---------- Fotos ---------- */
+function compress(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const im = new Image();
+    im.onload = () => { const max = 720; let w = im.naturalWidth, h = im.naturalHeight; const k = Math.min(1, max/Math.max(w,h)); w = Math.round(w*k); h = Math.round(h*k);
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h; cv.getContext("2d").drawImage(im, 0, 0, w, h);
+      URL.revokeObjectURL(url); res({ src: cv.toDataURL("image/jpeg", 0.55), w, h }); };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error("img")); };
+    im.src = url;
+  });
+}
+$("#photoInput").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = "";
+  if (!f || !photoTarget) return;
+  if (S.fotos.length >= MAX_FOTOS) { infoBox(`Esta ficha j\u00e1 tem ${MAX_FOTOS} fotos, que \u00e9 o limite por fiscaliza\u00e7\u00e3o. Remova uma foto para anexar outra.`); return; }
+  try { const r = await compress(f); toast(`Foto anexada (${S.fotos.length + 1} de ${MAX_FOTOS}).`); S.fotos.push({ ref: photoTarget, label: labelOf(S, photoTarget), src: r.src, w: r.w, h: r.h }); renderThumbs(photoTarget); changed(); }
+  catch(_) { toast("N\u00e3o foi poss\u00edvel ler essa imagem. Tente outra foto."); }
+});
+
+/* ---------- Eventos da ficha ---------- */
+let draftTimer = null;
+let avisouMemoria = false;
+function persistDraft(){
+  if (lsSet("rancho.atual", { S, dirty })) { avisouMemoria = false; return; }
+  if (!avisouMemoria) { avisouMemoria = true; infoBox("A mem\u00f3ria do navegador encheu e o rascunho com as \u00faltimas fotos n\u00e3o ficou guardado no aparelho. Toque em Salvar agora para enviar a ficha \u00e0 planilha, com sinal de internet."); }
+}
+function changed(){
+  dirty = true; setSaveState();
+  clearTimeout(draftTimer); draftTimer = setTimeout(persistDraft, 300);
+  refreshDerived();
+}
+$("#form").addEventListener("input", e => {
+  const el = e.target; if (!el.dataset || !el.dataset.bind) return;
+  setPath(S, el.dataset.bind, el.value);
+  if (el.dataset.bind === "fiscal") lsSet("rancho.fiscal", el.value);
+  changed();
+});
+$("#form").addEventListener("change", async e => {
+  if (e.target.id === "refeicaoSel") {
+    const nova = e.target.value, c = resumo(S);
+    const temDados = c.S + c.N + c.NA > 0 || pesosDe(S).some(d => { const p = S.pesagem[d.k]; return (p.a || []).some(Boolean) || (d.campos || []).some(cc => p[cc.f]); });
+    if (temDados && !(await confirmBox("Trocar para " + REFEICOES[nova].nome.toLowerCase() + "? As respostas e pesagens j\u00e1 preenchidas nesta ficha ser\u00e3o apagadas. Data, fiscal e preposto continuam.", "Trocar"))) { e.target.value = S.refeicao; return; }
+    trocarRefeicao(nova); return;
+  } const el = e.target; if (el.tagName === "SELECT" && el.dataset.bind) { setPath(S, el.dataset.bind, el.value); changed(); } });
+document.addEventListener("click", async e => {
+  const t = e.target.closest("button, a"); if (!t) return;
+  if (t.closest(".tri") && t.dataset.val) {
+    const box = t.closest(".tri"); if (t.disabled) return;
+    const path = box.dataset.tri; const cur = getPath(S, path);
+    setPath(S, path, cur === t.dataset.val ? "" : t.dataset.val);
+    if (path.startsWith("itens.")) { const id = path.split(".")[1]; S.itens[id].auto = false; }
+    changed(); return;
+  }
+  if (t.dataset.goto) { e.preventDefault(); const sec = document.getElementById(t.dataset.goto); if (sec) sec.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); return; }
+  if (t.dataset.obs) { const r = t.dataset.obs; if (openObs.has(r)) openObs.delete(r); else openObs.add(r); refreshDerived(); if (openObs.has(r)) { const ta = document.getElementById("obs-" + r); if (ta) ta.focus(); } return; }
+  if (t.dataset.photo) {
+    if (S.fotos.length >= MAX_FOTOS) { infoBox(`Esta ficha j\u00e1 tem ${MAX_FOTOS} fotos, que \u00e9 o limite por fiscaliza\u00e7\u00e3o. Para anexar outra, remova uma foto tocando no \u00d7 sobre ela.`); return; }
+    photoTarget = t.dataset.photo; $("#photoInput").click(); return;
+  }
+  if (t.dataset.rmphoto != null) { const i = +t.dataset.rmphoto; const ref = S.fotos[i] && S.fotos[i].ref; S.fotos.splice(i, 1); pesosDe(S).forEach(p => renderThumbs("p-"+p.k)); itensDe(S).forEach(it => renderThumbs(it.id)); if (ref) changed(); return; }
+  if (t.dataset.clear) { S.assin[t.dataset.clear] = ""; pads[t.dataset.clear] && pads[t.dataset.clear].clear(); changed(); return; }
+  if (t.dataset.view) { showView(t.dataset.view); return; }
+  const act = t.dataset.act; if (!act) return;
+  if (act === "salvar") await salvar();
+  else if (act === "nova") {
+    if (dirty && !(await confirmBox("H\u00e1 altera\u00e7\u00f5es n\u00e3o salvas nesta ficha. Descartar e come\u00e7ar uma nova?", "Descartar"))) return;
+    S = newState(); dirty = false; openObs.clear(); persistDraft(); renderForm(); setSaveState(); window.scrollTo(0,0); showView("form");
+  }
+  else if (act === "concluir") await concluir();
+  else if (act === "reabrir") {
+    const senha = await senhaBox("Reabrir esta fiscaliza\u00e7\u00e3o para edi\u00e7\u00e3o? As assinaturas s\u00e3o mantidas, mas ser\u00e1 preciso concluir de novo.", "Reabrir");
+    if (senha == null) return;
+    try { await Store.reabrir(S.id, senha); } catch(err) { toast(errMsg(err)); return; }
+    S.status = "rascunho"; S.reaberturas = (S.reaberturas || []).concat(new Date().toISOString()); delete S.concluidaEm;
+    dirty = true; persistDraft(); renderForm(); setSaveState();
+  }
+  else if (act === "pdf") await pdfDe(S);
+  else if (act === "email") await emailDe(S);
+  else if (act === "copiar") {
+    const ta = $("#notifTxt");
+    try { await navigator.clipboard.writeText(ta.value); toast("Texto copiado."); }
+    catch(_) { ta.removeAttribute("readonly"); ta.focus(); ta.select(); ta.setAttribute("readonly",""); toast("Texto selecionado. Use Copiar do seu aparelho."); }
+  }
+});
+
+async function salvar(silent){
+  const rec = clone(S); rec.atualizadoEm = new Date().toISOString();
+  if (!Store.canEdit(S)) { toast("Voc\u00ea n\u00e3o pode alterar esta fiscaliza\u00e7\u00e3o."); return false; }
+
+  setSaveState("Salvando\u2026");
+  try { const quando = await Store.save(rec); S.atualizadoEm = quando || rec.atualizadoEm; dirty = false; persistDraft(); setSaveState(); if (!silent) toast(Store.mode === "gs" ? "Fiscaliza\u00e7\u00e3o salva na planilha." : "Fiscaliza\u00e7\u00e3o salva neste aparelho."); return true; }
+  catch(e) { setSaveState(); toast(errMsg(e)); return false; }
+}
+async function concluir(){
+  const p = pendencias(S);
+  if (p.length) { toast(`Faltam ${p.length} ${p.length > 1 ? "pend\u00eancias" : "pend\u00eancia"} para concluir.`); const pw = $("#pendWrap"); pw && pw.scrollIntoView({ block: "center" }); return; }
+  S.status = "concluida"; S.concluidaEm = new Date().toISOString();
+  const ok = await salvar(true);
+  if (!ok) { S.status = "rascunho"; delete S.concluidaEm; return; }
+  toast("Fiscaliza\u00e7\u00e3o conclu\u00edda e salva.");
+  renderForm(); window.scrollTo(0,0);
+}
+function setSaveState(busy){
+  const el = $("#saveState");
+  const onde = Store.mode === "gs" ? "Salvo na planilha do app" : "Salvo s\u00f3 neste aparelho";
+  let t, s;
+  if (busy) { t = busy; s = ""; }
+  else if (!Store.canEdit(S)) { t = "Somente leitura"; s = S.fiscal ? "Registro de " + S.fiscal : ""; }
+  else if (S.status === "concluida") { t = "Conclu\u00edda \u00b7 " + fmtDate(S.data); s = onde; }
+  else if (dirty) { t = "Altera\u00e7\u00f5es n\u00e3o salvas"; s = "Rascunho guardado neste aparelho"; }
+  else if (S.atualizadoEm) { t = "Salvo \u00e0s " + hhmm(new Date(S.atualizadoEm)); s = onde; }
+  else { t = "Ficha nova \u00b7 " + fmtDate(S.data); s = "Preencha e toque em Salvar"; }
+  el.innerHTML = `<b>${esc(t)}</b><span>${esc(s)}</span>`;
+}
+
+/* ---------- Vis\u00f5es ---------- */
+function showView(v){
+  ["form","hist","painel"].forEach(x => { $("#view-" + x).hidden = x !== v; $("#tab-" + x).setAttribute("aria-selected", String(x === v)); });
+  $("#secnav").hidden = v !== "form"; $("#foot").hidden = v !== "form";
+  if (v === "form") { Object.values(pads).forEach(p => p.fit()); }
+  if (v === "hist") renderHist();
+  if (v === "painel") renderPainel();
+  measureHeader();
+}
+function measureHeader(){ const h = $("#bar").getBoundingClientRect().height; document.documentElement.style.setProperty("--hdr", Math.round(h) + "px"); }
+window.addEventListener("resize", () => { measureHeader(); Object.values(pads).forEach(p => p.fit()); });
+
+function onListChange(){
+  setSaveState();
+  if (S) refreshDerived();
+  if (!$("#view-hist").hidden) renderHist();
+  if (!$("#view-painel").hidden) renderPainel();
+}
+function onPerm(){
+  if (S) { applyLock(); refreshDerived(); setSaveState(); }
+  const cs = $("#cfgSave"), ct = $("#cfgTol"); const pode = Store.mode !== "db" || Store.owner;
+  if (cs) cs.disabled = !pode; if (ct) ct.disabled = !pode;
+
+}
+function onCfgLink(){ const l = $("#lnkPlanilha"); if (l && Store.planilha) { l.href = Store.planilha; l.hidden = false; } }
+function onCfg(){ onCfgLink(); const i = $("#cfgTol"); if (i && document.activeElement !== i) i.value = CFG.tol; if (S) refreshDerived(); }
+
+function statusKey(r){ return r.status !== "concluida" ? "rascunho" : (r.decisao === "notificar" ? "notificar" : "arquivar"); }
+function sortedList(){ return Store.list.slice().sort((a,b) => (b.data||"").localeCompare(a.data||"") || (b.atualizadoEm||"").localeCompare(a.atualizadoEm||"")); }
+function renderHist(){
+  const mes = $("#fMes").value, st = $("#fStatus").value, rf = $("#fRef").value;
+  const rows = sortedList().filter(r => (!mes || (r.data||"").startsWith(mes)) && (!st || statusKey(r) === st) && (!rf || (r.refeicao || "almoco") === rf));
+  $("#storeNote").textContent = Store.mode === "gs" ? "Aqui aparecem as fiscaliza\u00e7\u00f5es de todos os fiscais. Excluir e reabrir pedem a senha do respons\u00e1vel." : "Modo de teste: os registros ficam s\u00f3 neste aparelho.";
+  const pillTxt = { rascunho:"Rascunho", arquivar:"Arquivada", notificar:"Notificada" };
+  const pillCls = { rascunho:"rasc", arquivar:"arq", notificar:"not" };
+  $("#hlist").innerHTML = rows.length ? rows.map(r => {
+    const rec = normalize(r); const c = resumo(rec); const d = new Date(rec.data + "T12:00:00"); const k = statusKey(rec);
+    const cb = M_(rec).cab;
+    const prot = (cb.prot ? cb.prot.map(([k]) => rec.cardapio[k].desc) : [rec.cardapio.fruta ? "Fruta: " + rec.cardapio.fruta : ""]).filter(Boolean).join(" \u00b7 ") || "Card\u00e1pio n\u00e3o informado";
+    return `<article class="hcard">
+      <div class="hdate"><b>${pad2(d.getDate())}</b><span>${DIAS[d.getDay()]} \u00b7 ${pad2(d.getMonth()+1)}</span></div>
+      <div class="hmain"><p class="hcard-t">${esc(prot)}</p><p class="hcard-m">${esc(rec.fiscal || "Fiscal n\u00e3o informado")} \u00b7 ${c.pct == null ? "sem avalia\u00e7\u00e3o" : c.pct + "% conforme"} \u00b7 ${c.N} NC</p></div>
+      <div class="row" style="gap:4px;justify-content:flex-end">${rec.exemplo ? `<span class="pill ex">Exemplo</span>` : ""}<span class="pill ref">${M_(rec).nome}</span><span class="pill ${pillCls[k]}">${pillTxt[k]}</span></div>
+      <div class="hact"><button type="button" class="mini" data-hopen="${esc(rec.id)}">Abrir</button><button type="button" class="mini" data-hpdf="${esc(rec.id)}">PDF</button><button type="button" class="mini" data-hmail="${esc(rec.id)}">E-mail</button>${Store.canDelete() ? `<button type="button" class="mini" data-hdel="${esc(rec.id)}" style="color:var(--bad)">Excluir</button>` : ""}</div>
+    </article>`;
+  }).join("") : `<div class="empty">${Store.list.length ? "Nenhuma fiscaliza\u00e7\u00e3o neste filtro." : "Nenhuma fiscaliza\u00e7\u00e3o salva ainda. Preencha a ficha e toque em Salvar."}</div>`;
+}
+$("#fMes").addEventListener("input", renderHist); $("#fStatus").addEventListener("change", renderHist); $("#fRef").addEventListener("change", renderHist);
+$("#hlist").addEventListener("click", async e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const find = id => Store.list.find(r => r.id === id);
+  if (b.dataset.hopen) {
+    const r = find(b.dataset.hopen); if (!r) return;
+    if (dirty && S.id !== r.id && !(await confirmBox("H\u00e1 altera\u00e7\u00f5es n\u00e3o salvas na ficha atual. Descartar e abrir esta fiscaliza\u00e7\u00e3o?", "Abrir"))) return;
+    let full; try { toast("Abrindo\u2026"); full = await Store.full(r); } catch(err) { toast(errMsg(err)); return; }
+    S = normalize(full); dirty = false; openObs.clear(); persistDraft(); showView("form"); renderForm(); setSaveState(); window.scrollTo(0,0); $("#toast").hidden = true;
+  } else if (b.dataset.hpdf) {
+    const r = find(b.dataset.hpdf); if (!r) return;
+    let full; try { full = await Store.full(r); } catch(err) { toast(errMsg(err)); return; }
+    await pdfDe(normalize(full));
+  } else if (b.dataset.hmail) {
+    const r = find(b.dataset.hmail); if (!r) return;
+    let full; try { full = await Store.full(r); } catch(err) { toast(errMsg(err)); return; }
+    await emailDe(normalize(full));
+  } else if (b.dataset.hdel) {
+    const r = find(b.dataset.hdel); if (!r) return;
+    const senha = await senhaBox(`Excluir a fiscaliza\u00e7\u00e3o de ${fmtDate(r.data)}? A linha da planilha, as fotos e o PDF v\u00e3o para a lixeira.`, "Excluir");
+    if (senha == null) return;
+    try { await Store.remove(r, senha); toast("Fiscaliza\u00e7\u00e3o exclu\u00edda."); } catch(err) { toast(errMsg(err)); }
+  }
+});
+/* ---------- Painel ---------- */
+const MESES = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+function renderPainel(){
+  const ref = $("#pMes").value || todayISO().slice(0,7);
+  const rf = $("#pRef").value;
+  const all = Store.list.map(normalize).filter(r => !rf || r.refeicao === rf);
+  const doMes = all.filter(r => r.data.startsWith(ref));
+  const sum = rs => rs.reduce((a,r) => { const c = resumo(r); a.S += c.S; a.N += c.N; return a; }, {S:0,N:0});
+  const m = sum(doMes); const pct = (m.S+m.N) ? Math.round(m.S*100/(m.S+m.N)) : null;
+  const notif = doMes.filter(r => r.status === "concluida" && r.decisao === "notificar").length;
+  $("#pTiles").innerHTML = `<div class="tile"><b>${doMes.length}</b><span>Fiscaliza\u00e7\u00f5es</span></div><div class="tile ok"><b>${pct == null ? "\u2013" : pct + "%"}</b><span>Conformidade</span></div><div class="tile bad"><b>${m.N}</b><span>N\u00e3o conformidades</span></div><div class="tile warn"><b>${notif}</b><span>Notifica\u00e7\u00f5es</span></div>`;
+  // Barras 6 meses
+  const [ry, rm] = ref.split("-").map(Number); const months = [];
+  for (let i = 5; i >= 0; i--) { const d = new Date(ry, rm-1-i, 1); const key = d.getFullYear() + "-" + pad2(d.getMonth()+1); const s = sum(all.filter(r => r.data.startsWith(key))); months.push({ key, lbl: MESES[d.getMonth()] + "/" + String(d.getFullYear()).slice(2), pct: (s.S+s.N) ? Math.round(s.S*100/(s.S+s.N)) : null }); }
+  const W = 600, H = 220, L = 34, B = 26, T = 18, bw = (W-L-10)/6;
+  const y = v => T + (H-T-B) * (1 - v/100);
+  let svg = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Conformidade por m\u00eas">`;
+  [0,50,100].forEach(v => svg += `<line class="grid" x1="${L}" x2="${W-6}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}%</text>`);
+  months.forEach((mo,i) => { const x = L + i*bw + bw*0.2, w = bw*0.6;
+    if (mo.pct != null) svg += `<rect class="bar" x="${x}" y="${y(mo.pct)}" width="${w}" height="${y(0)-y(mo.pct)}" rx="3"/><text class="val" x="${x+w/2}" y="${y(mo.pct)-5}" text-anchor="middle">${mo.pct}%</text>`;
+    else svg += `<text x="${x+w/2}" y="${y(0)-6}" text-anchor="middle">sem dados</text>`;
+    svg += `<text x="${x+w/2}" y="${H-8}" text-anchor="middle">${mo.lbl}</text>`; });
+  $("#pBars").innerHTML = svg + "</svg>";
+  // Linha da prote\u00edna principal (normalizada para 200 g quando com osso)
+  const pts = all.filter(r => r.pesagem.principal).sort((a,b) => a.data.localeCompare(b.data)).map(r => { const v = r.pesagem.principal.a.map(num).filter(x => x != null); if (!v.length) return null; let m = v.reduce((a,b)=>a+b,0)/v.length; if (r.cardapio.principal.osso === "com") m = m*200/350; return { d: r.data, v: m }; }).filter(Boolean).slice(-12);
+  if (pts.length) {
+    const vmin = Math.min(160, ...pts.map(p => p.v)) - 10, vmax = Math.max(240, ...pts.map(p => p.v)) + 10;
+    const H2 = 200, L2 = 40, B2 = 26, T2 = 12; const yy = v => T2 + (H2-T2-B2) * (1 - (v-vmin)/(vmax-vmin));
+    const xx = i => pts.length === 1 ? (L2 + W)/2 : L2 + 10 + i * (W-L2-30)/(pts.length-1);
+    let s2 = `<svg class="chart" viewBox="0 0 ${W} ${H2}" role="img" aria-label="M\u00e9dia da prote\u00edna principal">`;
+    [vmin, 200, vmax].forEach(v => s2 += `<text x="${L2-6}" y="${yy(v)+4}" text-anchor="end">${Math.round(v)}</text>`);
+    s2 += `<line class="refl" x1="${L2}" x2="${W-6}" y1="${yy(200)}" y2="${yy(200)}"/>`;
+    s2 += `<polyline class="ln" points="${pts.map((p,i) => xx(i)+","+yy(p.v)).join(" ")}"/>`;
+    pts.forEach((p,i) => { s2 += `<circle class="dot ${p.v < 200 ? "low" : ""}" cx="${xx(i)}" cy="${yy(p.v)}" r="4"/>`; if (pts.length <= 8 || i % 2 === 0 || i === pts.length-1) s2 += `<text x="${xx(i)}" y="${H2-8}" text-anchor="middle">${fmtDate(p.d).slice(0,5)}</text>`; });
+    $("#pLine").innerHTML = s2 + "</svg>";
+  } else $("#pLine").innerHTML = `<div class="empty">As m\u00e9dias aparecem aqui depois que houver pesagens salvas.</div>`;
+  // Ranking de NC
+  const ini = months[0].key, fim = months[5].key + "-31"; const cnt = {};
+  all.filter(r => r.data >= ini && r.data <= fim).forEach(r => resumo(r).nc.forEach(x => { const k = (rf ? "" : M_(r).nome + " \u00b7 ") + x.label; cnt[k] = (cnt[k]||0) + 1; }));
+  const top = Object.entries(cnt).sort((a,b) => b[1]-a[1]).slice(0,8); const mx = top.length ? top[0][1] : 1;
+  $("#pRank").innerHTML = top.length ? top.map(([k,n]) => `<li><span>${esc(k)}</span><b>${n}\u00d7</b><span class="bar-h"><i style="width:${Math.round(n*100/mx)}%"></i></span></li>`).join("") : `<li class="empty" style="display:block">Nenhuma n\u00e3o conformidade no per\u00edodo.</li>`;
+}
+$("#pMes").addEventListener("input", renderPainel); $("#pRef").addEventListener("change", renderPainel);
+$("#cfgSave").addEventListener("click", async () => {
+  const v = Math.max(0, Math.min(20, num($("#cfgTol").value) || 0));
+  let senha = "";
+  if (Store.mode === "gs") { senha = await senhaBox("Alterar a toler\u00e2ncia de pesagem para " + v + "%?", "Salvar"); if (senha == null) return; }
+  try { await Store.saveCfg({ tol: v }, senha); CFG = Object.assign({}, CFG, { tol: v }); toast("Par\u00e2metros salvos."); refreshDerived(); } catch(e) { toast(errMsg(e)); }
+});
+
+/* ---------- PDF ---------- */
+async function gerarPDF(rec){
+  if (!window.jspdf || !window.jspdf.jsPDF) { toast("O gerador de PDF n\u00e3o carregou. Verifique a conex\u00e3o e recarregue a p\u00e1gina."); return null; }
+  const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit: "mm", format: "a4" });
+  if (typeof doc.autoTable !== "function") { toast("O gerador de tabelas do PDF n\u00e3o carregou."); return null; }
+  const M0 = M_(rec);
+  const W = 210, M = 12; let y = 14;
+  const clean = s => String(s ?? "").replace(/[\u2013\u2014]/g, "-").replace(/[\u201c\u201d]/g, '"').replace(/\u2265/g, ">=").replace(/\u00bd/g, " e meio");
+  const X = (v, t) => v === t ? "X" : "";
+  const ensure = h => { if (y + h > 280) { doc.addPage(); y = 14; } };
+  const title = t => { ensure(14); doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(22,62,102); doc.text(clean(t), M, y); doc.setTextColor(20,20,20); y += 2; };
+  const table = (head, body, opts) => { doc.autoTable(Object.assign({ startY: y, head: [head.map(clean)], body: body.map(r => r.map(clean)), margin: { left: M, right: M },
+    styles: { fontSize: 8, cellPadding: 1.5, lineColor: [175,185,195], lineWidth: 0.1, textColor: [20,20,20], valign: "middle" },
+    headStyles: { fillColor: [22,62,102], textColor: 255, fontStyle: "bold" }, alternateRowStyles: { fillColor: [244,247,250] } }, opts || {})); y = doc.lastAutoTable.finalY + 5; };
+  const note = t => { ensure(8); doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.setTextColor(80,90,100); const ls = doc.splitTextToSize(clean(t), W - 2*M); doc.text(ls, M, y - 2); y += ls.length*3.4 + 1; doc.setTextColor(20,20,20); };
+  const center = n => { const o = {}; for (let i = 0; i < 3; i++) o[n - 3 + i] = { halign: "center", cellWidth: 10 }; return o; };
+
+  doc.setFont("helvetica","bold"); doc.setFontSize(14); doc.text("ADENDO D", W/2, y, { align: "center" }); y += 6;
+  doc.setFontSize(11); doc.text(clean(M0.pdf), W/2, y, { align: "center" }); y += 8;
+  doc.setFont("helvetica","normal"); doc.setFontSize(9);
+  doc.text(clean(`Data: ${fmtDate(rec.data)}`), M, y); doc.text(clean(`Fiscal do Contrato: ${rec.fiscal}`), M + 40, y); y += 5;
+  doc.text(clean(`Preposto da CONTRATADA: ${rec.preposto}`), M, y); y += 5;
+  const c = rec.cardapio, cb = M0.cab, partes = [];
+  (cb.prot || []).forEach(([k, t]) => partes.push(t.replace("Prote\u00edna ","").toLowerCase() + " " + [c[k].desc || "-", c[k].tipo, c[k].osso === "com" ? "com osso" : "sem osso"].filter(Boolean).join(", ")));
+  if (cb.massa) partes.push("massa de acompanhamento: " + (c.massa === "sim" ? "sim" : c.massa === "nao" ? "n\u00e3o" : "-"));
+  if (cb.sobremesa) partes.push("doce: " + (c.doce || "-"), "fruta: " + (c.fruta || "-"));
+  if (cb.fruta) partes.push("fruta do dia: " + (c.fruta || "-"));
+  const card = doc.splitTextToSize(clean("Card\u00e1pio: " + partes.join("; ") + "."), W - 2*M);
+  doc.text(card, M, y); y += card.length*4 + 4;
+
+  M0.secoes.forEach(s => {
+    if (s.tipo === "pesos") {
+      title(s.pdf || s.titulo);
+      const nA = Math.max(0, ...s.pesos.map(d => d.amostras || 0));
+      const temCampos = s.pesos.some(d => (d.campos || []).length);
+      const head = ["Item"].concat(Array.from({ length: nA }, (_, i) => (i+1) + "\u00aa Amostra")).concat(temCampos ? ["Por\u00e7\u00e3o / medidas"] : []).concat(["Ref.","Sim","N\u00e3o","N/A"]);
+      const body = s.pesos.map(d => {
+        const p = rec.pesagem[d.k] || {}, r = d.ref(rec), w = d.what ? d.what(rec) : "";
+        const am = Array.from({ length: nA }, (_, i) => d.amostras ? fmtU((p.a || [])[i], unidDe(rec, d)) : "-");
+        const med = (d.campos || []).map(cc => num(p[cc.f]) != null ? cc.label + ": " + fmtU(p[cc.f], unidDe(rec, d, cc)) : "").filter(Boolean).join("\n");
+        return [d.curto + (w ? "\n" + w : "")].concat(am).concat(temCampos ? [med] : []).concat([r.txt, X(p.resp,"S"), X(p.resp,"N"), X(p.resp,"NA")]);
+      });
+      table(head, body, { columnStyles: center(head.length) });
+      if (s.pdfNota || s.nota) note(s.pdfNota || s.nota);
+    } else if (s.tipo === "itens") {
+      title((s.pdf || s.titulo) + (s.ambiente ? " (sal\u00e3o e buffet)" : " - Atende ao TR"));
+      table(["Item","Sim","N\u00e3o","N/A","Observa\u00e7\u00e3o"], s.itens.map(i => { const it = rec.itens[i.id] || {};
+        const extra = i.hora && rec.horaInicio ? ` (in\u00edcio real: ${rec.horaInicio})` : (i.hint && i.id !== "falta_alimento" ? " (" + i.hint.replace(/\.$/,"") + ")" : "") + (i.dyn ? " - " + i.dyn(rec) : "");
+        const qual = i.desc && (it.desc || "").trim() ? ": " + it.desc.trim() : "";
+        return [i.label + qual + extra, X(it.v,"S"), X(it.v,"N"), X(it.v,"NA"), it.obs || ""]; }),
+        { columnStyles: { 1: { halign: "center", cellWidth: 10 }, 2: { halign: "center", cellWidth: 10 }, 3: { halign: "center", cellWidth: 10 }, 4: { cellWidth: 58 } } });
+      if (s.nota) note(s.nota);
+      if (s.ambiente) {
+        ensure(20); doc.setFont("helvetica","bold"); doc.setFontSize(9); doc.text("*Justificativa da empresa:", M, y); doc.setFont("helvetica","normal");
+        const jl = doc.splitTextToSize(clean(rec.justificativa || "-"), W - 2*M); doc.text(jl, M, y + 5); y += 5 + jl.length*4 + 4;
+      }
+    }
+  });
+  const obsP = pesosDe(rec).filter(d => rec.pesagem[d.k] && rec.pesagem[d.k].obs.trim()).map(d => [d.label, rec.pesagem[d.k].obs.trim()]);
+  if (obsP.length) { title("Observa\u00e7\u00f5es das pesagens"); table(["Pesagem","Observa\u00e7\u00e3o"], obsP); }
+
+  ensure(60);
+  const r = resumo(rec);
+  doc.setFont("helvetica","bold"); doc.setFontSize(9);
+  doc.text(clean(`Resumo: ${r.S} conformes, ${r.N} n\u00e3o conformes, ${r.NA} N/A${r.vazio ? ", " + r.vazio + " sem resposta" : ""}${r.pct != null ? " - " + r.pct + "% de conformidade" : ""}.`), M, y); y += 7;
+  doc.setFontSize(10);
+  doc.text(`( ${rec.decisao === "arquivar" ? "X" : "  "} ) Arquivar      ( ${rec.decisao === "notificar" ? "X" : "  "} ) Notificar`, M, y); y += 8;
+  doc.setFontSize(9); doc.text(clean("Respons\u00e1veis pelas Informa\u00e7\u00f5es:"), M, y); y += 4;
+  const sw = 80, sh = 26, x2 = W - M - sw;
+  try { if (rec.assin.fiscal) doc.addImage(rec.assin.fiscal, "PNG", M, y, sw, sh); } catch(_){}
+  try { if (rec.assin.preposto) doc.addImage(rec.assin.preposto, "PNG", x2, y, sw, sh); } catch(_){}
+  y += sh + 1; doc.setDrawColor(60); doc.line(M, y, M + sw, y); doc.line(x2, y, x2 + sw, y); y += 4;
+  doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
+  doc.text("Fiscal do Contrato", M + sw/2, y, { align: "center" }); doc.text("Preposto da CONTRATADA", x2 + sw/2, y, { align: "center" }); y += 4;
+  doc.text(clean(rec.fiscal || ""), M + sw/2, y, { align: "center" }); doc.text(clean(rec.preposto || ""), x2 + sw/2, y, { align: "center" }); y += 8;
+
+  if (rec.decisao === "notificar") {
+    ensure(30); title("Rascunho da notifica\u00e7\u00e3o");
+    doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
+    const nl = doc.splitTextToSize(clean(textoNotificacao(rec)), W - 2*M);
+    nl.forEach(line => { ensure(5); doc.text(line, M, y + 3); y += 4; }); y += 4;
+  }
+  if (rec.fotos.length) {
+    doc.addPage(); y = 14; title("Anexo - Registros fotogr\u00e1ficos"); y += 4;
+    const cw = (W - 2*M - 6)/2; let col = 0, rowH = 0;
+    rec.fotos.forEach((f, i) => {
+      const h = Math.min(cw * (f.h / f.w), 95);
+      const w = h * (f.w / f.h);
+      if (col === 0) { if (y + h + 10 > 285) { doc.addPage(); y = 14; } rowH = 0; }
+      const x = M + col*(cw + 6);
+      try { doc.addImage(f.src, "JPEG", x, y, w, h); } catch(_){}
+      doc.setFontSize(7.5); doc.text(doc.splitTextToSize(clean(`Foto ${i+1}: ${f.label}`), cw), x, y + h + 4);
+      rowH = Math.max(rowH, h + 10);
+      col++; if (col === 2) { col = 0; y += rowH; }
+    });
+  }
+  const n = doc.getNumberOfPages();
+  for (let i = 1; i <= n; i++) { doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(110); doc.text("Ver. 02 - 19/06/2023", M, 290); doc.text(clean(`P\u00e1gina ${i} de ${n}`), W - M, 290, { align: "right" }); doc.text(clean(`Gerado em ${fmtDate(todayISO())} \u00e0s ${hhmm()}`), W/2, 290, { align: "center" }); doc.setTextColor(20); }
+  return doc.output("blob");
+}
+
+/* ---------- Toast e confirma\u00e7\u00e3o ---------- */
+let toastT = null;
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3800); }
+function abrirModal(msg, ok, opts){
+  return new Promise(res => {
+    const m = $("#modal"); $("#modalMsg").textContent = msg; $("#modalYes").textContent = ok || "Confirmar";
+    $("#modalSenhaWrap").hidden = !opts.senha; $("#modalSenha").value = "";
+    $("#modalEmailWrap").hidden = $("#modalEmailNote").hidden = !opts.email; if (opts.email) $("#modalEmail").value = lsGet("rancho.emails") || "";
+    const lk = $("#modalLink"); lk.hidden = !opts.link; if (opts.link) lk.href = opts.link;
+    $("#modalNo").hidden = !!opts.info;
+    m.hidden = false; (opts.senha ? $("#modalSenha") : opts.email ? $("#modalEmail") : $("#modalYes")).focus();
+    const done = v => { m.hidden = true; $("#modalYes").onclick = $("#modalNo").onclick = null; $("#modalSenha").onkeydown = null; res(v); };
+    $("#modalYes").onclick = () => done(opts.senha ? $("#modalSenha").value : opts.email ? $("#modalEmail").value : true);
+    $("#modalNo").onclick = () => done(opts.senha || opts.email ? null : false);
+    $("#modalSenha").onkeydown = e => { if (e.key === "Enter") done($("#modalSenha").value); };
+  });
+}
+const confirmBox = (msg, ok) => abrirModal(msg, ok, {});
+const senhaBox = (msg, ok) => abrirModal(msg, ok, { senha: Store.mode === "gs" }).then(v => v === true ? "" : v);
+const emailBox = (msg) => abrirModal(msg, "Enviar", { email: true });
+const infoBox = (msg, link) => abrirModal(msg, "Fechar", { info: true, link });
+
+/* ---------- PWA: instala\u00e7\u00e3o e funcionamento sem sinal ---------- */
+(function(){
+  const standalone = matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  const noApps = /googleusercontent\.com$|script\.google\.com$/.test(location.hostname);
+  if ("serviceWorker" in navigator && location.protocol === "https:" && !noApps) {
+    window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+  }
+  if (standalone || noApps) return;
+  const pnl = $("#pnlInstalar"), btn = $("#btnInstalar"), txt = $("#instTxt");
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (ios) { pnl.hidden = false; txt.textContent = "No Safari, toque em Compartilhar e depois em \u201cAdicionar \u00e0 Tela de In\u00edcio\u201d. O app passa a abrir pelo \u00edcone, em tela cheia e mesmo sem sinal."; }
+  let evt = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); evt = e; pnl.hidden = false; btn.hidden = false; });
+  btn.addEventListener("click", async () => { if (!evt) return; evt.prompt(); try { await evt.userChoice; } catch(_){} evt = null; btn.hidden = true; pnl.hidden = true; });
+  window.addEventListener("appinstalled", () => { pnl.hidden = true; toast("App instalado. Abra pelo \u00edcone Rancho."); });
+})();
+
+/* ---------- In\u00edcio ---------- */
+const draft = lsGet("rancho.atual");
+S = normalize(draft && draft.S); dirty = !!(draft && draft.dirty);
+const cfgLocal = lsGet("rancho.cfg"); if (cfgLocal) CFG = Object.assign(CFG, cfgLocal);
+$("#cfgTol").value = CFG.tol; $("#pMes").value = todayISO().slice(0,7);
+renderForm(); setSaveState(); showView("form"); onPerm();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureHeader);
+Store.init();
+})();
+</script>
+</body>
+</html>
