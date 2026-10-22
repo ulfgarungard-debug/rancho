@@ -467,7 +467,7 @@ const REFEICOES = {
         nota:"1 p\u00e3o e meio do tipo franc\u00eas (75 g) ou 1 p\u00e3o do tipo integral (50 g). Marque N/A no tipo que n\u00e3o foi servido.",
         pesos:[ P_FIX("pao_frances","P\u00e3o franc\u00eas","g",50,[{ f:"porcao", label:"Por\u00e7\u00e3o servida", unid:"g" }],{ porcao:75 },"50 g por p\u00e3o \u00b7 por\u00e7\u00e3o 1\u00bd p\u00e3o (75 g)"),
                 P_FIX("pao_integral","P\u00e3o integral","g",50,[{ f:"porcao", label:"Por\u00e7\u00e3o servida", unid:"g" }],{ porcao:50 },"50 g \u00b7 por\u00e7\u00e3o 1 p\u00e3o") ] },
-      { id:"s-compl", t:"Complementares", tipo:"pesos", titulo:"Itens complementares", sub:"Porcionamento por comensal", pdf:"Itens Complementares",
+      { id:"s-compl", t:"Complementares", tipo:"pesos", titulo:"Itens complementares", sub:"Porcionamento por comensal", pdf:"Itens Complementares", pdfCompl:true,
         nota:"Marque N/A nos itens que n\u00e3o foram servidos no dia.",
         pesos:[ P_FIX("banana_aveia","Banana prata com aveia","g",null,[{ f:"banana", label:"Banana (2 un.)", unid:"g" },{ f:"aveia", label:"Aveia", unid:"g" }],{ banana:180, aveia:40 },"2 un. de 90 g + 40 g de aveia"),
                 COMPL("bolo","Bolo sabores",150,"g"), COMPL("canjica","Canjica simples",150,"g"), COMPL("iogurte","Iogurte de frutas",180,"mL"),
@@ -495,9 +495,9 @@ const REFEICOES = {
       { id:"s-prot", t:"Prote\u00edna", tipo:"pesos", titulo:"Pesagem da prote\u00edna", sub:"Sem osso: 200 g ap\u00f3s a coc\u00e7\u00e3o<br>Com osso: 350 g por comensal",
         pdf:"Amostra da Pesagem da Prote\u00edna sem osso* (200 g ap\u00f3s a coc\u00e7\u00e3o)",
         nota:"Por\u00e7\u00e3o de 200 g por comensal, ou meia por\u00e7\u00e3o (misto): 100 g do principal mais 100 g da op\u00e7\u00e3o.",
-        pdfNota:"*Prote\u00edna com osso: pesagem de 350 g por comensal. Por\u00e7\u00e3o de 200 g por comensal ou por\u00e7\u00e3o de 100 g do principal mais a op\u00e7\u00e3o por comensal.",
+        pdfNota:"*Prote\u00edna com osso: pesagem de 350 g por comensal. **Por\u00e7\u00e3o de 200 g por comensal ou por\u00e7\u00e3o de 100 g do principal mais a op\u00e7\u00e3o por comensal.", pdfCampos:{ inteira:"**Por\u00e7\u00e3o Inteira", meia:"**Meia Por\u00e7\u00e3o (misto)" },
         pesos:[ P_PROT("principal","Principal","Prote\u00edna principal",true), P_PROT("opcao","Op\u00e7\u00e3o","Prote\u00edna op\u00e7\u00e3o",true) ] },
-      { id:"s-soja", t:"Soja", tipo:"pesos", titulo:"Prote\u00edna \u00e0 base de soja", sub:"Refer\u00eancia: 100 g", pdf:"Amostra da Pesagem da Prote\u00edna \u00e0 base de soja (100 g)", pesos:[ P_SOJA ] },
+      { id:"s-soja", t:"Soja", tipo:"pesos", titulo:"Prote\u00edna \u00e0 base de soja", sub:"Refer\u00eancia: 100 g", pdf:"Amostra da Pesagem da Prote\u00edna \u00e0 base de soja (100 g)", pdfSemRef:true, pesos:[ P_SOJA ] },
       { id:"s-buffet", t:"Buffet", tipo:"itens", titulo:"Buffet", itens:[
         I("tomate","Foi distribu\u00eddo um tipo de tomate",{ hint:"N\u00e3o ser\u00e3o aceitos tomates para molho." }),
         I("alface","Foi distribu\u00eddo um tipo de alface"), I("folhosa","Foi distribu\u00eddo um tipo de hortali\u00e7a folhosa"),
@@ -511,7 +511,7 @@ const REFEICOES = {
         I("soja_opcao","Foi distribu\u00edda uma op\u00e7\u00e3o proteica \u00e0 base de soja") ] },
       { id:"s-mesa", t:"Mesa de apoio", tipo:"itens", titulo:"Composi\u00e7\u00e3o da mesa de apoio", itens: MESA_BASE.concat([
         I("sucos","Foram distribu\u00eddos dois tipos de suco de polpa, sendo um DIET",{ hint:"Sem controle de consumo." }), CAFE, CHA, CARD_VIS, PLACAS ]) },
-      { id:"s-sobre", t:"Sobremesa", tipo:"pesos", titulo:"Sobremesa", sub:"Fruta e doce \u00b7 Tabela 1", pdf:"Amostra da Sobremesa (Fruta e doce - Tabela 1)", tabela:true, pesos:[ P_DOCE, P_FRUTA ] },
+      { id:"s-sobre", t:"Sobremesa", tipo:"pesos", titulo:"Sobremesa", sub:"Fruta e doce \u00b7 Tabela 1", pdf:"Amostra da Sobremesa (Fruta e doce - Tabela 1)", pdfEscolha:true, tabela:true, pesos:[ P_DOCE, P_FRUTA ] },
       { id:"s-amb", t:"Ambiente", tipo:"itens", ambiente:true, titulo:"Verifica\u00e7\u00e3o do ambiente", sub:"Sal\u00e3o e buffet", itens: ambiente("almo\u00e7o","10h40","inicio_1040") },
       { id:"s-enc", t:"Encerramento", tipo:"enc", titulo:"Encerramento" }
     ]
@@ -522,9 +522,9 @@ const REFEICOES = {
       { id:"s-cab", t:"Card\u00e1pio", tipo:"cab", titulo:"Identifica\u00e7\u00e3o e card\u00e1pio" },
       { id:"s-prot", t:"Prote\u00edna", tipo:"pesos", titulo:"Pesagem da prote\u00edna", sub:"Sem osso: 200 g ap\u00f3s a coc\u00e7\u00e3o<br>Com osso: 350 g por comensal",
         pdf:"Amostra da Pesagem da Prote\u00edna sem osso* (200 g ap\u00f3s a coc\u00e7\u00e3o)", nota:"Por\u00e7\u00e3o de 200 g por comensal.",
-        pdfNota:"*Prote\u00edna com osso: pesagem de 350 g por comensal. Por\u00e7\u00e3o de 200 g por comensal.",
+        pdfNota:"*Prote\u00edna com osso: pesagem de 350 g por comensal. **Por\u00e7\u00e3o de 200 g por comensal.", pdfCampos:{ inteira:"**Por\u00e7\u00e3o Inteira" },
         pesos:[ P_PROT("principal","Principal","Prote\u00edna principal",false) ] },
-      { id:"s-soja", t:"Soja", tipo:"pesos", titulo:"Prote\u00edna \u00e0 base de soja", sub:"Refer\u00eancia: 100 g", pdf:"Amostra da Pesagem da Prote\u00edna \u00e0 base de soja (100 g)", pesos:[ P_SOJA ] },
+      { id:"s-soja", t:"Soja", tipo:"pesos", titulo:"Prote\u00edna \u00e0 base de soja", sub:"Refer\u00eancia: 100 g", pdf:"Amostra da Pesagem da Prote\u00edna \u00e0 base de soja (100 g)", pdfSemRef:true, pesos:[ P_SOJA ] },
       { id:"s-buffet", t:"Buffet", tipo:"itens", titulo:"Buffet", itens:[
         I("tomate","Foi distribu\u00eddo um tipo de tomate ou vinagrete",{ hint:"N\u00e3o ser\u00e3o aceitos tomates para molho." }),
         I("alface","Foi distribu\u00eddo um tipo de alface"), I("arroz_polido","Foi distribu\u00eddo arroz polido"),
@@ -534,7 +534,7 @@ const REFEICOES = {
         I("ovo","Foi distribu\u00eddo ovo como guarni\u00e7\u00e3o",{ hint:"Uma vez na semana. Nos dias sem ovo previsto, marque N/A.", meta:1 }) ] },
       { id:"s-mesa", t:"Mesa de apoio", tipo:"itens", titulo:"Composi\u00e7\u00e3o da mesa de apoio", itens: MESA_BASE.concat([
         I("suco","Foi distribu\u00eddo 1 (um) tipo de suco de polpa",{ hint:"Sem controle de consumo." }), CAFE, CHA ]) },
-      { id:"s-sobre", t:"Sobremesa", tipo:"pesos", titulo:"Sobremesa", sub:"Fruta e doce \u00b7 TR itens 8.2.2.6 a 8.2.2.8", pdf:"Amostra da Sobremesa (Fruta e doce*)",
+      { id:"s-sobre", t:"Sobremesa", tipo:"pesos", titulo:"Sobremesa", sub:"Fruta e doce \u00b7 TR itens 8.2.2.6 a 8.2.2.8", pdf:"Amostra da Sobremesa (Fruta e doce*)", pdfEscolha:true,
         pdfNota:"*Consultar TR itens 8.2.2.6, 8.2.2.7 e 8.2.2.8.", tabela:true, pesos:[ P_DOCE, P_FRUTA ] },
       { id:"s-amb", t:"Ambiente", tipo:"itens", ambiente:true, titulo:"Verifica\u00e7\u00e3o do ambiente", sub:"Sal\u00e3o e buffet", itens: ambiente("jantar","17h30","inicio") },
       { id:"s-ceia", t:"Ceia", tipo:"itens", titulo:"Ceia \u2013 kit lanche", pdf:"CEIA - Kit Lanche",
@@ -1406,14 +1406,27 @@ async function gerarPDF(rec){
   M0.secoes.forEach(s => {
     if (s.tipo === "pesos") {
       title(s.pdf || s.titulo);
+      if (s.pdfCompl) {
+        const body = s.pesos.map(d => { const p = rec.pesagem[d.k] || {}, r = d.ref(rec), w = d.what ? d.what(rec) : "";
+          const med = (d.campos || []).filter(cc => num(p[cc.f]) != null).map(cc => (d.campos.length > 1 ? cc.label + ": " : "") + fmtU(p[cc.f], unidDe(rec, d, cc))).join("\n");
+          return [d.curto + (d.outros && w ? ": " + w : ""), r.falta ? "-" : r.txt, med, X(p.resp,"S"), X(p.resp,"N"), X(p.resp,"NA")]; });
+        table(["Item/Composi\u00e7\u00e3o","Porcionamento","Amostra por\u00e7\u00e3o","Sim","N\u00e3o","N/A"], body, { columnStyles: center(6) });
+        if (s.pdfNota || s.nota) note(s.pdfNota || s.nota);
+        return;
+      }
       const nA = Math.max(0, ...s.pesos.map(d => d.amostras || 0));
-      const temCampos = s.pesos.some(d => (d.campos || []).length);
-      const head = ["Item"].concat(Array.from({ length: nA }, (_, i) => (i+1) + "\u00aa Amostra")).concat(temCampos ? ["Por\u00e7\u00e3o / medidas"] : []).concat(["Ref.","Sim","N\u00e3o","N/A"]);
+      const cols = []; s.pesos.forEach(d => (d.campos || []).forEach(cc => { if (!cols.some(x => x.f === cc.f)) cols.push(cc); }));
+      const head = ["Item"].concat(s.pdfEscolha ? ["Escolha"] : [])
+        .concat(Array.from({ length: nA }, (_, i) => (i+1) + "\u00aa Amostra"))
+        .concat(cols.map(cc => (s.pdfCampos && s.pdfCampos[cc.f]) || cc.label))
+        .concat(s.pdfSemRef ? [] : ["Ref."]).concat(["Sim","N\u00e3o","N/A"]);
       const body = s.pesos.map(d => {
         const p = rec.pesagem[d.k] || {}, r = d.ref(rec), w = d.what ? d.what(rec) : "";
         const am = Array.from({ length: nA }, (_, i) => d.amostras ? fmtU((p.a || [])[i], unidDe(rec, d)) : "-");
-        const med = (d.campos || []).map(cc => num(p[cc.f]) != null ? cc.label + ": " + fmtU(p[cc.f], unidDe(rec, d, cc)) : "").filter(Boolean).join("\n");
-        return [d.curto + (w ? "\n" + w : "")].concat(am).concat(temCampos ? [med] : []).concat([r.txt, X(p.resp,"S"), X(p.resp,"N"), X(p.resp,"NA")]);
+        const med = cols.map(cc => { const meu = (d.campos || []).find(x => x.f === cc.f); return meu ? fmtU(p[cc.f], unidDe(rec, d, meu)) : "-"; });
+        const refCurta = r.a != null ? fmtU(r.a, unidDe(rec, d)) : (r.falta ? "-" : r.txt);
+        return [d.curto + (d.outros && w ? "\n" + w : "")].concat(s.pdfEscolha ? [w || "-"] : []).concat(am).concat(med)
+          .concat(s.pdfSemRef ? [] : [refCurta]).concat([X(p.resp,"S"), X(p.resp,"N"), X(p.resp,"NA")]);
       });
       table(head, body, { columnStyles: center(head.length) });
       if (s.pdfNota || s.nota) note(s.pdfNota || s.nota);
