@@ -671,7 +671,6 @@ function pendencias(rec){
   itensDe(rec).filter(i => i.desc && descObrig(rec.itens[i.id]) && !(rec.itens[i.id].desc || "").trim())
     .forEach(i => p.push([i.sec, i.desc.replace(/\?$/, "").replace(/^Qual /, "Informe qual ")]));
   if (rec.pesagem.outros && rec.pesagem.outros.resp && rec.pesagem.outros.resp !== "NA" && !rec.pesagem.outros.desc.trim()) p.push(["s-compl","Informe qual \u00e9 o outro item complementar"]);
-  if (ambienteDe(rec).some(i => rec.itens[i.id] && rec.itens[i.id].v === "N") && !rec.justificativa.trim()) p.push(["s-amb","Registre a justificativa da empresa"]);
   if (!rec.decisao) p.push(["s-enc","Escolha Arquivar ou Notificar"]);
   if (!rec.assin.fiscal) p.push(["s-enc","Falta a assinatura do fiscal"]);
   if (!rec.assin.preposto) p.push(["s-enc","Falta a assinatura do preposto"]);
@@ -982,7 +981,7 @@ function renderForm(){
     if (s.tipo === "cab") body = cabHTML(M);
     else if (s.tipo === "pesos") body = s.pesos.map(pesoBlock).join("") + (s.nota ? `<p class="note">${esc(s.nota)}</p>` : "") + (s.tabela ? TABELA1 : "");
     else if (s.tipo === "itens") body = `<div class="list">${s.itens.map(itemRow).join("")}</div>` + (s.nota ? `<p class="note">${esc(s.nota)}</p>` : "") +
-      (s.ambiente ? `<label class="fld"><span id="justLbl">Justificativa da empresa</span><textarea id="justificativa" data-bind="justificativa" placeholder="Registre a explica\u00e7\u00e3o dada pelo preposto"></textarea></label>` : "");
+      (s.ambiente ? `<label class="fld"><span id="justLbl">Justificativa da empresa</span><textarea id="justificativa" data-bind="justificativa" placeholder="Opcional. Se a empresa for responder por e-mail, deixe em branco."></textarea></label>` : "");
     else if (s.tipo === "enc") body = encHTML();
     return `<section class="sec" id="${s.id}">${secHead(i+1, s.titulo, s.sub)}<div class="sec-b">${body}</div></section>`;
   }).join("");
@@ -1051,8 +1050,7 @@ function refreshDerived(){
   });
   // Justificativa
   const ambNC = ambienteDe(S).some(i => S.itens[i.id].v === "N");
-  const jl = $("#justLbl"); if (jl) jl.textContent = ambNC ? "Justificativa da empresa (obrigat\u00f3ria)" : "Justificativa da empresa";
-  const jt = $("#justificativa"); if (jt) jt.classList.toggle("req", ambNC && !S.justificativa.trim());
+  const jl = $("#justLbl"); if (jl) jl.textContent = "Justificativa da empresa (opcional)";
   // Encerramento
   const c = resumo(S);
   const tl = $("#encTiles");
