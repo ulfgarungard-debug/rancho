@@ -85,6 +85,9 @@ main{padding-block:16px 120px}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 12px}
 .grid3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
 @media (max-width:520px){.grid3{grid-template-columns:1fr 1fr}.grid3 .fld:first-child{grid-column:1/-1}}
+.outro-box{grid-column:1/-1;display:grid;grid-template-columns:2fr 1fr;gap:10px 12px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:6px}
+.outro-box[hidden]{display:none}
+@media (max-width:520px){.outro-box{grid-template-columns:1fr}}
 .fld{display:flex;flex-direction:column;gap:4px;min-width:0}
 .fld>span{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 input[type=text],input[type=date],input[type=time],input[type=number],input[type=month],input:not([type]),select,textarea{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:16px}
@@ -410,6 +413,9 @@ const DOCES = [
   ["Flan",150,"150 g"],["Curau",150,"150 g"],["Gelatina",150,"150 g"],["Gelatina DIET",150,"150 g"],["Flan DIET",150,"150 g"],
   ["Bolo confeitado",100,"100 g"]
 ];
+/* Sobremesa fora da Tabela 1: escolha "Outro" e digite o item (ex.: sagu) */
+const OUTRO = "Outro";
+const nomeCard = (rec, k) => { const v = rec.cardapio[k] || ""; return v === OUTRO ? ((rec.cardapio[k + "Outro"] || "").trim() || "Outro (n\u00e3o informado)") : v; };
 const TIPOS = ["Bovina","Frango","Su\u00edna","Peixe","Outro"];
 const tabTxt = row => row[2] + (row[2].indexOf(String(row[1])) === 0 ? "" : " (" + row[1] + " g)");
 
@@ -444,8 +450,11 @@ const P_PROT = (k, curto, longo, meia) => ({ k, curto, label: longo, unid: "g", 
 const P_SOJA = { k:"soja", curto:"Soja", label:"Prote\u00edna \u00e0 base de soja", unid:"g", amostras:3, campos:[{ f:"inteira", label:"Por\u00e7\u00e3o inteira" }],
   ref: () => ({ a:100, f:{ inteira:100 }, txt:"100 g" }) };
 const P_TAB = (k, curto, label, tab) => ({ k, curto, label, unid:"g", amostras:3, campos:[],
-  ref: rec => { const row = tab.find(r => r[0] === rec.cardapio[k]); return row ? { a: row[1], txt: tabTxt(row) } : { a: null, txt: "selecione no card\u00e1pio", falta: "Escolha o item na se\u00e7\u00e3o Card\u00e1pio para ver a refer\u00eancia." }; },
-  what: rec => rec.cardapio[k] || "" });
+  ref: rec => {
+    if (rec.cardapio[k] === OUTRO) { const g = num(rec.cardapio[k + "Ref"]);
+      return g != null ? { a: g, txt: fmtG(g) + " (informado pelo fiscal)" } : { a: null, txt: "item fora da Tabela 1", falta: "Item fora da Tabela 1. Para ter a sugest\u00e3o autom\u00e1tica, informe a gramagem prevista no Card\u00e1pio; sem ela, responda pela sua avalia\u00e7\u00e3o." }; }
+    const row = tab.find(r => r[0] === rec.cardapio[k]); return row ? { a: row[1], txt: tabTxt(row) } : { a: null, txt: "selecione no card\u00e1pio", falta: "Escolha o item na se\u00e7\u00e3o Card\u00e1pio para ver a refer\u00eancia." }; },
+  what: rec => rec.cardapio[k] ? nomeCard(rec, k) : "" });
 const P_DOCE = P_TAB("doce","Doce","Sobremesa doce",DOCES);
 const P_FRUTA = P_TAB("fruta","Fruta","Sobremesa fruta",FRUTAS);
 const P_FIX = (k, label, unid, a, campos, f, txt) => ({ k, curto: label, label, unid, amostras: a ? 3 : 0, campos, ref: () => ({ a: a || null, f, txt }) });
@@ -482,7 +491,7 @@ const REFEICOES = {
         I("achocolatado","Foi distribu\u00eddo achocolatado em p\u00f3"),
         I("acucar_adocante","Foram distribu\u00eddos sach\u00ea de a\u00e7\u00facar e vidro de ado\u00e7ante 100 mL"),
         I("manteiga","Foram distribu\u00eddos sach\u00ea de 10 g de manteiga e margarina tipo extra (com e sem sal)"),
-        I("fruta_cardapio","Foi distribu\u00edda fruta conforme card\u00e1pio",{ dyn: rec => { const row = FRUTAS.find(r => r[0] === rec.cardapio.fruta); return row ? "Fruta do dia: " + row[0] + " \u00b7 " + row[2] + "." : "Escolha a fruta do dia na se\u00e7\u00e3o Card\u00e1pio para ver a gramagem."; } }),
+        I("fruta_cardapio","Foi distribu\u00edda fruta conforme card\u00e1pio",{ dyn: rec => { if (rec.cardapio.fruta === OUTRO) return "Fruta do dia: " + nomeCard(rec, "fruta") + " \u00b7 fora da Tabela 1" + (num(rec.cardapio.frutaRef) != null ? " \u00b7 " + fmtG(rec.cardapio.frutaRef) + " informado pelo fiscal" : "") + "."; const row = FRUTAS.find(r => r[0] === rec.cardapio.fruta); return row ? "Fruta do dia: " + row[0] + " \u00b7 " + row[2] + "." : "Escolha a fruta do dia na se\u00e7\u00e3o Card\u00e1pio para ver a gramagem."; } }),
         I("suco","Foi distribu\u00eddo suco de polpa",{ hint:"Sem controle de consumo." }),
         CARD_VIS, PLACAS ] },
       { id:"s-amb", t:"Ambiente", tipo:"itens", ambiente:true, titulo:"Verifica\u00e7\u00e3o do ambiente", sub:"Sal\u00e3o e buffet", itens: ambiente("desjejum","06h30","inicio") },
@@ -589,7 +598,7 @@ function newState(refeicao){
     id: "f-" + d.replace(/-/g,"") + "-" + Math.random().toString(36).slice(2,6),
     refeicao, status: "rascunho", criadoEm: new Date().toISOString(),
     data: d, fiscal: lsGet("rancho.fiscal") || "", preposto: "",
-    cardapio: { principal:{desc:"",tipo:"",osso:"sem"}, opcao:{desc:"",tipo:"",osso:"sem"}, massa:"", doce:"", fruta:"" },
+    cardapio: { principal:{desc:"",tipo:"",osso:"sem"}, opcao:{desc:"",tipo:"",osso:"sem"}, massa:"", doce:"", doceOutro:"", doceRef:"", fruta:"", frutaOutro:"", frutaRef:"" },
     pesagem: {}, itens: {}, horaInicio: "", justificativa: "", fotos: [], decisao: "", assin: {fiscal:"", preposto:""}
   };
   pesosDe(s).forEach(dd => {
@@ -672,6 +681,7 @@ function pendencias(rec){
   itensDe(rec).filter(i => i.desc && descObrig(rec.itens[i.id]) && !(rec.itens[i.id].desc || "").trim())
     .forEach(i => p.push([i.sec, i.desc.replace(/\?$/, "").replace(/^Qual /, "Informe qual ")]));
   if (rec.pesagem.outros && rec.pesagem.outros.resp && rec.pesagem.outros.resp !== "NA" && !rec.pesagem.outros.desc.trim()) p.push(["s-compl","Informe qual \u00e9 o outro item complementar"]);
+  ["doce","fruta"].forEach(k => { if (rec.cardapio[k] === OUTRO && !(rec.cardapio[k + "Outro"] || "").trim()) p.push(["s-cab", "Informe qual \u00e9 " + (k === "doce" ? "o doce" : "a fruta") + " fora da lista"]); });
   if (!rec.decisao) p.push(["s-enc","Escolha Arquivar ou Notificar"]);
   if (!rec.assin.fiscal) p.push(["s-enc","Falta a assinatura do fiscal"]);
   if (!rec.assin.preposto) p.push(["s-enc","Falta a assinatura do preposto"]);
@@ -913,6 +923,11 @@ function pesoBlock(d){
   </div>`;
 }
 const sel = (path, opts, ph) => `<select id="${path}" data-bind="${path}"><option value="">${ph}</option>${opts.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join("")}</select>`;
+const selOutro = (k, rotulo, lista, ex) => `<label class="fld"><span>${rotulo}</span>${sel("cardapio." + k, lista.map(x => x[0]).concat([OUTRO]), "\u2014")}</label>
+  <div class="outro-box" data-outro="${k}" hidden>
+    <label class="fld"><span>Qual ${k === "doce" ? "doce" : "fruta"}?</span><input type="text" id="cardapio.${k}Outro" data-bind="cardapio.${k}Outro" placeholder="${ex}" autocomplete="off"></label>
+    <label class="fld"><span>Gramagem prevista (g)</span><input type="text" inputmode="decimal" id="cardapio.${k}Ref" data-bind="cardapio.${k}Ref" placeholder="Opcional" autocomplete="off"></label>
+  </div>`;
 function secHead(n, title, sub){ return `<header class="sec-h"><span class="sec-n">${pad2(n)}</span><h2>${esc(title)}</h2>${sub ? `<span class="sec-sub">${sub}</span>` : ""}</header>`; }
 function protCard(k, t){
   return `<div class="sub"><h3>${t}</h3><div class="grid3">
@@ -938,12 +953,11 @@ function cabHTML(M){
   if (c.massa || c.sobremesa) {
     h += `<div class="sub"><h3>Acompanhamentos e sobremesa</h3><div class="grid2">
         ${c.massa ? `<label class="fld"><span>Houve massa de acompanhamento?</span><select id="cardapio.massa" data-bind="cardapio.massa"><option value="">\u2014</option><option value="sim">Sim</option><option value="nao">N\u00e3o</option></select></label>` : ""}
-        ${c.sobremesa ? `<label class="fld"><span>Sobremesa doce</span>${sel("cardapio.doce", DOCES.map(d=>d[0]), "\u2014")}</label>
-        <label class="fld"><span>Sobremesa fruta</span>${sel("cardapio.fruta", FRUTAS.map(f=>f[0]), "\u2014")}</label>` : ""}
+        ${c.sobremesa ? selOutro("doce", "Sobremesa doce", DOCES, "Ex.: Sagu") + selOutro("fruta", "Sobremesa fruta", FRUTAS, "Ex.: Kiwi") : ""}
       </div></div>`;
     notas.push("O tipo da prote\u00edna e a massa definem automaticamente quando o lim\u00e3o e o queijo ralado s\u00e3o N/A.");
   }
-  if (c.fruta) h += `<div class="sub"><h3>Card\u00e1pio do desjejum</h3><div class="grid2"><label class="fld"><span>Fruta do dia</span>${sel("cardapio.fruta", FRUTAS.map(f=>f[0]), "\u2014")}</label></div></div>`;
+  if (c.fruta) h += `<div class="sub"><h3>Card\u00e1pio do desjejum</h3><div class="grid2">${selOutro("fruta", "Fruta do dia", FRUTAS, "Ex.: Kiwi")}</div></div>`;
   if (notas.length) h += `<p class="note">${notas.join(" ")}</p>`;
   return h;
 }
@@ -1020,6 +1034,7 @@ function applyAuto(){
 }
 function refreshDerived(){
   applyAuto();
+  $$("#form [data-outro]").forEach(el => el.hidden = S.cardapio[el.dataset.outro] !== OUTRO);
   $$("#form [data-tri]").forEach(paintTri);
   // Pesagens
   pesosDe(S).forEach(d => {
@@ -1289,7 +1304,7 @@ function renderHist(){
   $("#hlist").innerHTML = rows.length ? rows.map(r => {
     const rec = normalize(r); const c = resumo(rec); const d = new Date(rec.data + "T12:00:00"); const k = statusKey(rec);
     const cb = M_(rec).cab;
-    const prot = (cb.prot ? cb.prot.map(([k]) => rec.cardapio[k].desc) : [rec.cardapio.fruta ? "Fruta: " + rec.cardapio.fruta : ""]).filter(Boolean).join(" \u00b7 ") || "Card\u00e1pio n\u00e3o informado";
+    const prot = (cb.prot ? cb.prot.map(([k]) => rec.cardapio[k].desc) : [rec.cardapio.fruta ? "Fruta: " + nomeCard(rec, "fruta") : ""]).filter(Boolean).join(" \u00b7 ") || "Card\u00e1pio n\u00e3o informado";
     return `<article class="hcard">
       <div class="hdate"><b>${pad2(d.getDate())}</b><span>${DIAS[d.getDay()]} \u00b7 ${pad2(d.getMonth()+1)}</span></div>
       <div class="hmain"><p class="hcard-t">${esc(prot)}</p><p class="hcard-m">${esc(rec.fiscal || "Fiscal n\u00e3o informado")} \u00b7 ${c.pct == null ? "sem avalia\u00e7\u00e3o" : c.pct + "% conforme"} \u00b7 ${c.N} NC</p></div>
@@ -1397,8 +1412,8 @@ async function gerarPDF(rec){
   const c = rec.cardapio, cb = M0.cab, partes = [];
   (cb.prot || []).forEach(([k, t]) => partes.push(t.replace("Prote\u00edna ","").toLowerCase() + " " + [c[k].desc || "-", c[k].tipo, c[k].osso === "com" ? "com osso" : "sem osso"].filter(Boolean).join(", ")));
   if (cb.massa) partes.push("massa de acompanhamento: " + (c.massa === "sim" ? "sim" : c.massa === "nao" ? "n\u00e3o" : "-"));
-  if (cb.sobremesa) partes.push("doce: " + (c.doce || "-"), "fruta: " + (c.fruta || "-"));
-  if (cb.fruta) partes.push("fruta do dia: " + (c.fruta || "-"));
+  if (cb.sobremesa) partes.push("doce: " + (nomeCard(rec, "doce") || "-"), "fruta: " + (nomeCard(rec, "fruta") || "-"));
+  if (cb.fruta) partes.push("fruta do dia: " + (nomeCard(rec, "fruta") || "-"));
   const card = doc.splitTextToSize(clean("Card\u00e1pio: " + partes.join("; ") + "."), W - 2*M);
   doc.text(card, M, y); y += card.length*4 + 4;
 
